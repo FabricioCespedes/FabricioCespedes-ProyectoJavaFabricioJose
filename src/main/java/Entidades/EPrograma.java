@@ -18,6 +18,15 @@ public class EPrograma {
     private String fechaFin;
     private String horasInicio;
     private String horasFin;
+    private int horasDia;
+
+    public int getHorasDia() {
+        return horasDia;
+    }
+
+    public void setHorasDia(int horasDia) {
+        this.horasDia = horasDia;
+    }
     private String estado;
     private int anio;
     private int grupo;
@@ -125,7 +134,7 @@ public class EPrograma {
     public EPrograma() {
     }
 
-    public EPrograma(int idPrograma, String codigo, String nombrePrograma, String fechaInicio, String fechaFin, String horasInicio, String horasFin, String estado, int anio, int grupo, ECentro centro, ArrayList<EDia> dia) {
+    public EPrograma(int idPrograma, String codigo, String nombrePrograma, String fechaInicio, String fechaFin, String horasInicio, String horasFin, int horasDia, String estado, int anio, int grupo, ECentro centro, ArrayList<EDia> dia) {
         this.idPrograma = idPrograma;
         this.codigo = codigo;
         this.nombrePrograma = nombrePrograma;
@@ -133,12 +142,15 @@ public class EPrograma {
         this.fechaFin = fechaFin;
         this.horasInicio = horasInicio;
         this.horasFin = horasFin;
+        this.horasDia = horasDia;
         this.estado = estado;
         this.anio = anio;
         this.grupo = grupo;
         this.centro = centro;
         this.dia = dia;
     }
+
+    
     
     
 }
