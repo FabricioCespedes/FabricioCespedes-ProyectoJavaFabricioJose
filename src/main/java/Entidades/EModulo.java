@@ -16,7 +16,7 @@ public class EModulo {
     private String nombreModulo;
     private String estado;
     private EModulo moduloRequerido;
-    private int horasTotales;
+    private double horasTotales;
 
     public int getIdModulo() {
         return idModulo;
@@ -58,11 +58,11 @@ public class EModulo {
         this.moduloRequerido = moduloRequerido;
     }
 
-    public int getHorasTotales() {
+    public double getHorasTotales() {
         return horasTotales;
     }
 
-    public void setHorasTotales(int horasTotales) {
+    public void setHorasTotales(double horasTotales) {
         this.horasTotales = horasTotales;
     }
 
@@ -72,7 +72,7 @@ public class EModulo {
     
     
     
-    public EModulo(int idModulo, String codigo, String nombreModulo, String estado, EModulo moduloRequerido, int horasTotales) {
+    public EModulo(int idModulo, String codigo, String nombreModulo, String estado, EModulo moduloRequerido, double horasTotales) {
         this.idModulo = idModulo;
         this.codigo = codigo;
         this.nombreModulo = nombreModulo;

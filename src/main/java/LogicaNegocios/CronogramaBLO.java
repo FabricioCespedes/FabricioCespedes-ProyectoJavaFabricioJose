@@ -7,7 +7,15 @@ package LogicaNegocios;
 import AccesoDatos.CronogramasDAO;
 import Entidades.*;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 /**
  *
  * @author Progra
@@ -242,6 +250,47 @@ public class CronogramaBLO {
         }
         return resultado;
     }
+    
+    public void calcularCronograma(EModuloCronograma cronograma) throws Exception{
+        Calendar c = Calendar.getInstance();
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("HHmm");
+        LocalTime horaI = LocalTime.parse(cronograma.getHoraInicio(), dateFormat);
+        LocalTime horaF = LocalTime.parse(cronograma.getHoraFin(), dateFormat);
+        System.out.println(MINUTES.between(horaI, horaF));
+        
+        try{
+            ADCronograma = new CronogramasDAO();
+            double horaDia=0;
+            while (cronograma.getModulo().getHorasTotales() > 0) {                
+                
+            }
+            
+            //int year = 2020;
+            
+//            for (EModuloCronograma cronograma : lista) {
+//                for (int i = 0; i < 12; i++) {
+//                    //c.set(year, i, 1);
+//                    c.set(programa.getAnio(), i, 1);
+//                    int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                    for (int x = 1; x <= lastDay; x++){
+//                        System.out.println(programa.getAnio() + "/" + (i+1) + "/" + x);
+//                        if (true) {
+//                            
+//                        }
+//                    }
+//                }
+//            }
+            
+            
+        }
+        catch(Exception e){
+           throw e;
+        }
+        
+    }
 
+   
+    
     
 }
+
