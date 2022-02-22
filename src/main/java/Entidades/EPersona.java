@@ -8,7 +8,7 @@ package Entidades;
  *
  * @author josea
  */
-public class EPersona {
+public abstract class EPersona {
     protected long idPersona;
     protected String nombre;
     protected String apellido1;

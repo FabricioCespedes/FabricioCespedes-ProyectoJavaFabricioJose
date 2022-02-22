@@ -8,7 +8,7 @@ package Entidades;
  *
  * @author josea
  */
-public class EDiaLibre {
+public abstract class EDiaLibre {
     protected int idDia;
     protected String fecha;
     protected EMotivoAusencia motivo;
