@@ -5,6 +5,11 @@
  */
 package Presentacion;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+
 /**
  *
  * @author Progra
@@ -16,6 +21,13 @@ public class frmApp extends javax.swing.JFrame {
      */
     public frmApp() {
         initComponents();
+
+        ImageIcon icon = new ImageIcon("src/main/java/Imagenes/iconoSalir.png");
+        menuItemSalir.setIcon(icon);
+        icon = new ImageIcon("src/main/java/Imagenes/iconoCronograma.png");
+        menuItemCrono.setIcon(icon);
+        icon = new ImageIcon("src/main/java/Imagenes/ina.png");
+        this.setIconImage(icon.getImage());
     }
 
     /**
@@ -27,20 +39,23 @@ public class frmApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktopPane = new javax.swing.JDesktopPane();
+        deskotPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
+        menuArchivo = new javax.swing.JMenu();
         menuItemSalir = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        contentMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        menuCrono = new javax.swing.JMenu();
+        menuItemCrono = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sistema de cronograma INA");
+        setIconImages(null);
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("Archivo");
+        menuBar.setBorderPainted(false);
+        menuBar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        menuArchivo.setMnemonic('f');
+        menuArchivo.setText("Archivo");
+        menuArchivo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         menuItemSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F14, java.awt.event.InputEvent.ALT_DOWN_MASK));
         menuItemSalir.setMnemonic('x');
@@ -51,31 +66,26 @@ public class frmApp extends javax.swing.JFrame {
                 menuItemSalirActionPerformed(evt);
             }
         });
-        fileMenu.add(menuItemSalir);
+        menuArchivo.add(menuItemSalir);
 
-        menuBar.add(fileMenu);
+        menuBar.add(menuArchivo);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Cronograma");
+        menuCrono.setMnemonic('e');
+        menuCrono.setText("Cronograma");
+        menuCrono.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
+        menuItemCrono.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemCrono.setMnemonic('t');
+        menuItemCrono.setText("Administrar cronogramas");
+        menuItemCrono.setToolTipText("Administre en esta opcion los cronogramas (almacenar,ver, actualizar y eliminar)");
+        menuItemCrono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCronoActionPerformed(evt);
+            }
+        });
+        menuCrono.add(menuItemCrono);
 
-        menuBar.add(editMenu);
-
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
-
-        contentMenuItem.setMnemonic('c');
-        contentMenuItem.setText("Contents");
-        helpMenu.add(contentMenuItem);
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText("About");
-        helpMenu.add(aboutMenuItem);
-
-        menuBar.add(helpMenu);
+        menuBar.add(menuCrono);
 
         setJMenuBar(menuBar);
 
@@ -83,11 +93,11 @@ public class frmApp extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(deskotPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(deskotPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
 
         pack();
@@ -96,6 +106,15 @@ public class frmApp extends javax.swing.JFrame {
     private void menuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_menuItemSalirActionPerformed
+
+    private void menuItemCronoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCronoActionPerformed
+        frmCronograma vistaCronograma = new frmCronograma();
+        deskotPane.add(vistaCronograma);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaCronograma.getSize();
+        vistaCronograma.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaCronograma.setVisible(true);
+    }//GEN-LAST:event_menuItemCronoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,20 +146,19 @@ public class frmApp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmApp().setVisible(true);
+                frmApp frm = new frmApp();
+                frm.setVisible(true);
+                frm.setExtendedState(JFrame.MAXIMIZED_BOTH);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
+    private javax.swing.JDesktopPane deskotPane;
+    private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuCrono;
+    private javax.swing.JMenuItem menuItemCrono;
     private javax.swing.JMenuItem menuItemSalir;
     // End of variables declaration//GEN-END:variables
 
