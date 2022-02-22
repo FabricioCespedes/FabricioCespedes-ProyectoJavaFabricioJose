@@ -99,6 +99,8 @@ public class CronogramasDAO {
 
         return list;
     }
+    
+    
 
     /**
      * Método que lista todos días feriados de un año.
@@ -213,11 +215,11 @@ public class CronogramasDAO {
     }
 
     /**
-     * Este método devuelve un cronograma segun la condición por la que se
+     * Este método devuelve un cronograma según la condición por la que se
      * quiera fitrar
      *
      * @param condicion Condicion por la que se quiere filtrar en la base de
-     * datos
+     * datos.
      * @return Retorna un cronograma.
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
@@ -507,6 +509,11 @@ public class CronogramasDAO {
 
         return result;
     }
+    
+    public void recorrerCalendario(){
+        
+    }
+    
 
     public String getMessage() {
         return msg;

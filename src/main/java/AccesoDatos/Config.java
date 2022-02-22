@@ -14,6 +14,6 @@ public class Config {
      * @return La cadena de conexión
      */
     public static String getConnectionString(){
-        return "jdbc:sqlserver://localhost:1433;databaseName=DBCronograma;user=javaUser;password=java";
+        return "jdbc:sqlserver://localhost:1433;databaseName=DBCronograma;user=javaUser;password=javaPass";
     }
 }
