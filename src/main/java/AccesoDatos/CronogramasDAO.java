@@ -224,7 +224,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EModulo> lista = new ArrayList<>();
         String query = "SELECT idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales FROM Modulos";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {
@@ -263,7 +263,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EPrograma> lista = new ArrayList<>();
         String query = "SELECT idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro, grupo FROM Programas";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {
@@ -306,7 +306,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EProfesor> lista = new ArrayList<>();
         String query = "SELECT idProfesor, nombreProfesor, apellido1Profesor, apellido2Profesor, idCentro FROM Profesores";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {
@@ -596,7 +596,6 @@ public class CronogramasDAO {
 
         return result;
     }
-
     /**
      * Método que elimina un modulo cronograma
      *
@@ -663,10 +662,163 @@ public class CronogramasDAO {
         return result;
     }
     
-    public void recorrerCalendario(){
-        
+    public int insertarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Insert into MotivosDeAusencia (justificacion) Values(?)";
+        ResultSet rs = null;
+        try {
+
+            PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, motivo.getMotivo());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                result = rs.getInt(1);
+                msg = "Motivo almacenado con éxito";
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
     }
     
+    public int actualizarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Update MotivosAusencias justificacion=? Where idMotivo=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setString(1, motivo.getMotivo());
+            ps.setInt(2, motivo.getIdMotivoAusencia());
+            ps.executeUpdate();
+            if (result > 0) {
+                msg = "Motivo actualizado con exito";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public int eliminarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Delete MotivosDeAusencias Where idMotivo=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setInt(1, motivo.getIdMotivoAusencia());
+            ps.executeUpdate();
+            if (result > 0) {
+                msg = "Motivo eliminado";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public int insertarDiaA(EDiaAusente diaA) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Insert into DiasAusentes (fechaInicio, fechaFin, idProfesor, idMotivo) Values(?,?,?,?)";
+        ResultSet rs = null;
+        try {
+
+            PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, diaA.getFecha());
+            ps.setString(2, diaA.getFechaFin());
+            ps.setLong(3, diaA.getProfesor().getIdPersona());
+            ps.setInt(4, diaA.getMotivo().getIdMotivoAusencia());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                result = rs.getInt(1);
+                msg = "Cronograma almacenado con éxito";
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public int actualizarDiaA(EDiaAusente diaA, EDiaAusente diaAAnterior) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Update DiasAusentes fechaInicio=?, fechaFin=?, idProfesor=?, idMotivo=? Where fechaInicio=? and fechaFin=? and idProfesor=? and idMotivo=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setString(1, diaA.getFecha());
+            ps.setString(2, diaA.getFechaFin());
+            ps.setLong(3,diaA.getProfesor().getIdPersona());
+            ps.setInt(4, diaA.getMotivo().getIdMotivoAusencia());
+            ps.setString(5, diaAAnterior.getFecha());
+            ps.setString(6, diaAAnterior.getFechaFin());
+            ps.setLong(7,diaAAnterior.getProfesor().getIdPersona());
+            ps.setInt(8, diaAAnterior.getMotivo().getIdMotivoAusencia());
+            ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día ausente actualizado con exito";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public int eliminarDiaA(EDiaAusente diaA) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Delete DiasAusentes Where fechaInicio=? and fechaFin=? and idProfesor=? and idMotivo=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setString(1, diaA.getFecha());
+            ps.setString(2, diaA.getFechaFin());
+            ps.setLong(3,diaA.getProfesor().getIdPersona());
+            ps.setInt(4, diaA.getMotivo().getIdMotivoAusencia());
+            ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día ausente eliminado";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
 
     public String getMessage() {
         return msg;

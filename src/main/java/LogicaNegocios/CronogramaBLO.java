@@ -298,7 +298,58 @@ public class CronogramaBLO {
         return resultado;
 
     }
+    
+    /**
+     * 
+     * @param motivo
+     * @return
+     * @throws Exception 
+     */
+    public int insertarMotivo(EMotivoAusencia motivo) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertarMotivo(motivo);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
 
+    }
+    /**
+     * 
+     * @param motivo
+     * @return
+     * @throws Exception 
+     */
+    public int actualizarMotivo(EMotivoAusencia motivo) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizarMotivo(motivo);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+
+    }
+    /**
+     * 
+     * @param motivo
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */
+    public int eliminarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminarMotivo(motivo);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
     /**
      * Este método se encarga redireccionar a la capa de acceso a datos para
      * usar otro método que elimina en la base de datos un cronograma
@@ -319,64 +370,63 @@ public class CronogramaBLO {
         return resultado;
     }
     /**
-     * 
-     * @param cronograma
-     * @return
-     * @throws Exception 
+     * Este módulo se encarga de calcular el cronograma de un módulo.
+     * @param cronograma Es el objeto EMóduloCronograma al que se le calculará su fecha fin.
+     * @return Una cadena diciendo si el proceso se realizó correctamente.
+     * @throws Exception  Arroja una excepción genérica
      */
     public String calcularCronograma(EModuloCronograma cronograma) throws Exception {
-        Calendar calendario = Calendar.getInstance();
-        EProfesor profe = new EProfesor();
+        Calendar calendario = Calendar.getInstance(); //Calendario que se va a rrecorrer
+        EProfesor profe = new EProfesor(); //Objeto profesor que se usa en la evaluación 
         boolean existe = false;
 
         try {
-            cronogramaDAO = new CronogramasDAO();
-            int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));
-            int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));
-            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4));
-            listaDiasFeriados = cronogramaDAO.listarDias(anio);
-            profe = cronograma.getProfesor().get(0);
-            listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());
+            cronogramaDAO = new CronogramasDAO(); //Instancia de CronogramasDAO para acceder a la capa de datos.
+            int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su mes de inicio.
+            int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su día de inicio.
+            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4)); //Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
+            listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se listan los días feriados del año.
+            profe = cronograma.getProfesor().get(0);//El objeto profesor se le asigna el primer profesor del ArrayList profesores del cronograma.
+            listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());//Se listan los dias que está ausente el profeosr
             double horaDia = 0;
-            double horasPorDia = obtenerHorasDia(cronograma.getHoraInicio(), cronograma.getHoraFin());
-            int contadorHoras = 0;
-            for (int i = mesInicio; i < 12; i++) {
-                calendario.set(anio, i, 1);
-                int lastDay = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+            double horasPorDia = obtenerHorasDia(cronograma.getHoraInicio(), cronograma.getHoraFin());//Este método obtiene la cantodad de horas por día de un módulo
+            int contadorHoras = 0;//Contador de las horas dadas que por día, se va a comparar con las horas totales del módulo
+            for (int i = mesInicio; i < 12; i++) {//Aqui se comienza el recorrido del caledario, se inicia un for con el mes inicial y se rrecorren los meses
+                calendario.set(anio, i, 1);//Al calendario se le da el año inicial, el mes que se está iterando y un día donde va a empezar
+                int lastDay = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);//lastDay va a guardar el último día del mes que se está iterando
                 int x = 0;
-                if ((mesInicio) == i) {
-                    x = dia;
+                if ((mesInicio) == i) {//Si el mes de inicio es igual al mes iterado
+                    x = dia;//La variable x se le asigna el día extraído de la fecha inicial
                 } else {
-                    x = 1;
+                    x = 1;//Si no se le asigna 1
                 }
-                for (; x <= lastDay; x++) {
+                for (; x <= lastDay; x++) { //Aqui se rrecorren los días del mes, desde el día que se asignó anteriormente hasta el último día del mes
 
-                    if (contadorHoras == cronograma.getModulo().getHorasTotales()) {
-                        cronograma.setFechaFin(anio + "/" + i + "/" + x);
+                    if (contadorHoras == cronograma.getModulo().getHorasTotales()) {//Cuando el contador de horas es el mismo que las horas totales del módulo 
+                        cronograma.setFechaFin(anio + "/" + i + "/" + x);//A la fecha fin del cronograma se le asignará la fecha que se lleva iterada
                         break;
                     } else {
-                        if (i == 12 && x == 31) {
-                            anio++;
-                            listaDiasFeriados = cronogramaDAO.listarDias(anio);
+                        if (i == 12 && x == 31) {//Si el mes llega a ser el último del año y se llega a su último día 
+                            anio++;//Se cambia de año para iterrar
+                            listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se vuelven a listar los días feriado pero del nuevo año
                         }
-                        if (!revisarDia(anio + "/" + i + "/" + x)) {
-                            contadorHoras += horasPorDia;
+                        if (!revisarDia(anio + "/" + i + "/" + x)) {//Se revisa si la fecha iterada está en los dias de ausencia o la lista de dias feriados
+                            contadorHoras += horasPorDia;//Si el resultado es negativo se le suman las horas por día
                         }
-
                     }
                 }
 
-                if (cronogramaDAO.obtener("idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma()) != null) {
-                    int ac1 = actualizar(cronograma);//Updates
+                if (cronogramaDAO.obtener("idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma()) != null) {//Si se obtiene un cronograma de módulo que tenga el mismo ID de módulo y el mismo ID de programa
+                    int ac1 = actualizar(cronograma);//Se actualiza la asignación cronograma
                     if (ac1 > -1) {
-                        int actCro = actualizar(cronograma, ac1);
-                        msg = "Cronograma calculado y insertado";
+                        int actCro = actualizar(cronograma, ac1);//Se actualiza el cronograma del módulo
+                        msg = "Cronograma calculado y actualizado";
                     }
                 } else {
-                    int insAsig = insertar(cronograma);//Inserts
+                    int insAsig = insertar(cronograma);//Se inserta la asignación cronograma
                     if (insAsig > -1) {
-                        int insCro = insertar(cronograma, insAsig);
-                        msg = "Cronograma calculado y modificado";
+                        int insCro = insertar(cronograma, insAsig);//Se inserta el cronograma del módulo
+                        msg = "Cronograma calculado y insertado";
                     }
 
                 }
@@ -389,10 +439,10 @@ public class CronogramaBLO {
         return msg;
     }
     /**
-     * 
-     * @param inicio
-     * @param fin
-     * @return 
+     * Este método se encarga de calcular horas diarias 
+     * @param inicio Recibe una cadena con la hora inicial
+     * @param fin Recibe una cadena con la hora final
+     * @return La diferencia entre las horas
      */
     private static double obtenerHorasDia(String inicio, String fin) {
         int horaInicio = Integer.parseInt(inicio.substring(0, 2));
@@ -413,9 +463,9 @@ public class CronogramaBLO {
         return resultado;
     }
     /**
-     * 
-     * @param fecha
-     * @return 
+     * Este método revisa si una fecha está en la lista de días ausentes o la lista de días feriados
+     * @param fecha Cadena con la fecha que se va a comparar en las listas
+     * @return Un booleano verdadero si encontro la fecha en algunas de las listas o falso si no lo encontró
      */
     private boolean revisarDia(String fecha) {
         boolean bandera = false;
@@ -428,9 +478,9 @@ public class CronogramaBLO {
     }
     /**
      * 
-     * @param modulos
-     * @param cronograma
-     * @return
+     * @param modulos recibe un objeto List con una lista de módulos
+     * @param cronograma recibe un objeto cronograma para asignar
+     * @return String con cadena que nos dice como salío el calculo del cronogra,
      * @throws SQLException
      * @throws Exception 
      */
