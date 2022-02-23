@@ -12,14 +12,14 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
-
 /**
  *
  * @author Progra
  */
 public class CronogramaBLO {
+
     private String msg;
-     CronogramasDAO cronogramaDAO;
+    CronogramasDAO cronogramaDAO;
     List<EDiaFeriado> listaDiasFeriados;
     List<EDiaAusente> listaDiasAusentes;
 
@@ -264,17 +264,18 @@ public class CronogramaBLO {
         return resultado;
     }
 
-    public void calcularCronograma(EModuloCronograma cronograma) throws Exception {
+    public String calcularCronograma(EModuloCronograma cronograma) throws Exception {
         Calendar calendario = Calendar.getInstance();
         EProfesor profe = new EProfesor();
-        
+        boolean existe = false;
+
         try {
             cronogramaDAO = new CronogramasDAO();
             int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));
             int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));
             int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4));
-            listaDiasFeriados =  cronogramaDAO.listarDias(anio);
-            profe =cronograma.getProfesor().get(0);
+            listaDiasFeriados = cronogramaDAO.listarDias(anio);
+            profe = cronograma.getProfesor().get(0);
             listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());
             double horaDia = 0;
             double horasPorDia = obtenerHorasDia(cronograma.getHoraInicio(), cronograma.getHoraFin());
@@ -289,20 +290,35 @@ public class CronogramaBLO {
                     x = 1;
                 }
                 for (; x <= lastDay; x++) {
-                    
+
                     if (contadorHoras == cronograma.getModulo().getHorasTotales()) {
-                       break; 
-                    }
-                    else{
-                        if (i == 12 && x==31) {
-                            anio ++;
-                            listaDiasFeriados =  cronogramaDAO.listarDias(anio);
+                        cronograma.setFechaFin(anio + "/" + i + "/" + x);
+                        break;
+                    } else {
+                        if (i == 12 && x == 31) {
+                            anio++;
+                            listaDiasFeriados = cronogramaDAO.listarDias(anio);
                         }
-                        if (!revisarDia(anio+"/"+i+"/"+x)) {
+                        if (!revisarDia(anio + "/" + i + "/" + x)) {
                             contadorHoras += horasPorDia;
                         }
- 
+
                     }
+                }
+
+                if (cronogramaDAO.obtener("idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma()) != null) {
+                    int ac1 = actualizar(cronograma);//Updates
+                    if (ac1 > -1) {
+                        int actCro = actualizar(cronograma, ac1);
+                        msg = "Cronograma calculado y insertado";
+                    }
+                } else {
+                    int insAsig = insertar(cronograma);//Inserts
+                    if (insAsig > -1) {
+                        int insCro = insertar(cronograma, insAsig);
+                        msg = "Cronograma calculado y modificado";
+                    }
+
                 }
 
             }
@@ -310,7 +326,7 @@ public class CronogramaBLO {
         } catch (Exception e) {
             throw e;
         }
-
+        return msg;
     }
 
     private static double obtenerHorasDia(String inicio, String fin) {
@@ -331,15 +347,43 @@ public class CronogramaBLO {
         }
         return resultado;
     }
-    
+
     private boolean revisarDia(String fecha) {
         boolean bandera = false;
-        
+
         if (listaDiasAusentes.contains(fecha) || listaDiasFeriados.contains(fecha)) {
             bandera = true;
         }
-        
+
         return bandera;
+    }
+
+    public String recibirModulos(List<EModulo> modulos, EModuloCronograma cronograma) throws SQLException, Exception {
+        String mensaje = "";
+        try {
+            for (EModulo modulo : modulos) {
+                cronograma.setModulo(modulo);
+                calcularCronograma(cronograma);
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return mensaje;
+    }
+
+    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws Exception {
+        int resultado;
+
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.obtenerIdAsignacion(cronograma);
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return resultado;
     }
 
 }
