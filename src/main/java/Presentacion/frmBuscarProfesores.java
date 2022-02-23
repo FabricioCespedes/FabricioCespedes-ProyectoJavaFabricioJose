@@ -6,8 +6,12 @@ package Presentacion;
 
 import Entidades.EProfesor;
 import LogicaNegocios.CronogramaBLO;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,7 +20,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmBuscarProfesores extends javax.swing.JDialog {
 
+    List<EProfesor> list;
     DefaultTableModel modelo;
+    EProfesor profesor = new EProfesor();
+
+    public EProfesor getProfesor() {
+        return profesor;
+    }
 
     /**
      * Creates new form frmBuscarProfesores
@@ -29,7 +39,6 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-
     }
 
     /**
@@ -51,6 +60,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProfesores = new javax.swing.JTable();
         btnRegresar = new javax.swing.JButton();
+        brnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -64,9 +74,11 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
         txtId.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         txtId.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 0L));
+        txtId.setToolTipText("Debe de ingresar la cedula completa");
         txtId.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         txtNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        txtNombre.setToolTipText("Busque por nombre o apellidos");
 
         btnBuscarId.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarId.setText("Buscar");
@@ -78,6 +90,11 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
         btnBuscarNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarNombre.setText("Buscar");
+        btnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarNombreActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -119,6 +136,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        tablaProfesores.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -138,6 +156,12 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tablaProfesores.setToolTipText("Precione doble click para seleccionar un profesor");
+        tablaProfesores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaProfesoresMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaProfesores);
 
         btnRegresar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
@@ -145,6 +169,14 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegresarActionPerformed(evt);
+            }
+        });
+
+        brnLimpiar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        brnLimpiar.setText("Limpiar");
+        brnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brnLimpiarActionPerformed(evt);
             }
         });
 
@@ -157,7 +189,8 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
-                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(brnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -167,9 +200,11 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(brnLimpiar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -178,13 +213,53 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
     private void btnBuscarIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarIdActionPerformed
         try {
             long id = (long) txtId.getValue();
+            if (id > 0) {
+                String condicion = " idProfesor = " + id;
+                llenarTable(condicion);
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en la identificacion");
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
         }
     }//GEN-LAST:event_btnBuscarIdActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
+        this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void brnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnLimpiarActionPerformed
+        try {
+            llenarTable("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_brnLimpiarActionPerformed
+
+    private void btnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarNombreActionPerformed
+        try {
+            String nombre = txtNombre.getText();
+            if (!nombre.equals("")) {
+                String condicion = " nombreProfesor like '%" + nombre + "%'";
+                llenarTable(condicion);
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en el nombre");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
+        }
+    }//GEN-LAST:event_btnBuscarNombreActionPerformed
+
+    private void tablaProfesoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProfesoresMouseClicked
+        if (evt.getClickCount() == 2) {
+            int row = tablaProfesores.rowAtPoint(evt.getPoint());
+            profesor = (EProfesor) tablaProfesores.getValueAt(row, 0);
+
+            this.dispose();
+        }
+
+    }//GEN-LAST:event_tablaProfesoresMouseClicked
 
     /**
      * @param args the command line arguments
@@ -230,16 +305,17 @@ this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void llenarTable(String condition) throws Exception {
         CronogramaBLO cronogramaBLO = new CronogramaBLO();
-        List<EProfesor> list;
+
         Object[] row = new Object[4];
 
         limpiarTabla();
         try {
             list = cronogramaBLO.listarProfesores(condition);
             for (EProfesor profesor : list) {
-                row[0] = profesor.getIdPersona();
-                row[1] = profesor.getNombre() + " " + profesor.getApellido1() + " " + profesor.getApellido2() ;
+                row[0] = profesor;
                 modelo.addRow(row);
+                tablaProfesores.setFont(new java.awt.Font("Tahoma", 0, 14));
+                tablaProfesores.setRowHeight(40);
             }
         } catch (Exception e) {
             throw e;
@@ -253,11 +329,17 @@ this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
                 return false;
             }
         };
-        modelo.addColumn("Identificación");
-        modelo.addColumn("Nombre");
+        modelo.addColumn("Profesores");
+        tablaProfesores.getTableHeader().setFont(new Font("Cooper Black", 1, 16));
+        tablaProfesores.getTableHeader().setBackground(Color.cyan);
+        tablaProfesores.getTableHeader().setForeground(Color.BLACK);
+        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+        tcr.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaProfesores.getColumnModel().getColumn(0).setCellRenderer(tcr);
         tablaProfesores.setModel(modelo);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton brnLimpiar;
     private javax.swing.JButton btnBuscarId;
     private javax.swing.JButton btnBuscarNombre;
     private javax.swing.JButton btnRegresar;
