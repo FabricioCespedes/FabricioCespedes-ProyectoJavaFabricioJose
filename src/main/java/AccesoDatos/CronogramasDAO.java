@@ -306,7 +306,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EProfesor> lista = new ArrayList<>();
         String query = "SELECT idProfesor, nombreProfesor, apellido1Profesor, apellido2Profesor, idCentro FROM Profesores";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {

@@ -8,6 +8,7 @@ import Entidades.EProfesor;
 import LogicaNegocios.CronogramaBLO;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,12 +16,20 @@ import javax.swing.JOptionPane;
  */
 public class frmBuscarProfesores extends javax.swing.JDialog {
 
+    DefaultTableModel modelo;
+
     /**
      * Creates new form frmBuscarProfesores
      */
     public frmBuscarProfesores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        try {
+            llenarTable("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
     }
 
     /**
@@ -112,15 +121,23 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
         tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaProfesores);
 
         btnRegresar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
@@ -216,18 +233,29 @@ this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
         List<EProfesor> list;
         Object[] row = new Object[4];
 
-        //  clearTable();
+        limpiarTabla();
         try {
-//            list = cronogramaBLO.listar(condition);
-//            for (Client client : list) {
-//                row[0] = client.getId_client();
-//                row[1] = client.getName();
-//                row[2] = client.getPhone();
-//                model.addRow(row);
-//            }
+            list = cronogramaBLO.listarProfesores(condition);
+            for (EProfesor profesor : list) {
+                row[0] = profesor.getIdPersona();
+                row[1] = profesor.getNombre() + " " + profesor.getApellido1() + " " + profesor.getApellido2() ;
+                modelo.addRow(row);
+            }
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    private void limpiarTabla() {
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int colum) {
+                return false;
+            }
+        };
+        modelo.addColumn("Identificación");
+        modelo.addColumn("Nombre");
+        tablaProfesores.setModel(modelo);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarId;

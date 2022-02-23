@@ -35,7 +35,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        btnModulo = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnBuscarPrograma = new javax.swing.JButton();
         jTextField4 = new javax.swing.JTextField();
@@ -63,8 +63,13 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton3.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jButton3.setText("Añadir modulo");
+        btnModulo.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnModulo.setText("Añadir modulo");
+        btnModulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModuloActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -74,14 +79,14 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 997, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnModulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                .addComponent(btnModulo, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(105, 105, 105))
@@ -233,6 +238,24 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         vistaBuscarProgramas.setVisible(true);
     }//GEN-LAST:event_btnBuscarProgramaActionPerformed
 
+    private void btnModuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloActionPerformed
+        frmCrearModuloPrograma vistaAddModulo = new frmCrearModuloPrograma(null, true);
+        vistaAddModulo.setLocationRelativeTo(this);
+
+        vistaAddModulo.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent wE) {
+                try {
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
+            }
+
+        });
+        vistaAddModulo.setVisible(true);
+    }//GEN-LAST:event_btnModuloActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -277,9 +300,9 @@ public class frmCrearCronograma extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarPrograma;
+    private javax.swing.JButton btnModulo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
