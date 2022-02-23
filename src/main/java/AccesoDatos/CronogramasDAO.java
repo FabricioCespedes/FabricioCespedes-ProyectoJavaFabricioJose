@@ -8,7 +8,6 @@ package AccesoDatos;
 import Entidades.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -214,26 +213,113 @@ public class CronogramasDAO {
 
         return lista;
     }
-    
+    /**
+     * Método que retorna la lista de los modulos registrados 
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto List con la información de los módulos requeridos
+     * @throws SQLException Retorna excepción sql.
+     * @throws Exception  Retorna excepción genérica.
+     */
     public List<EModulo> listarModulos(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EModulo> lista = new ArrayList<>();
-        String query = "SELECT idModulo, codigo, nombreModulo, idModuloReqerido, horasTotales FROM ";
+        String query = "SELECT idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales FROM Modulos";
+        if (condicion.equals("")) {
+            query += " WHERE "+condicion;
+        }
+        try {
+            Statement statement = _cnn.createStatement();            
+            rs = statement.executeQuery(query);
+            while (rs != null && rs.next()) {
+                EModulo modulo = new EModulo();
+                modulo.setIdModulo(rs.getInt(1));
+                modulo.setCodigo(rs.getString(2));
+                modulo.setNombreModulo(rs.getString(3));
+                EModulo moduloReq = new EModulo();
+                moduloReq.setIdModulo(rs.getInt(4));
+                modulo.setModuloRequerido(moduloReq);
+                modulo.setHorasTotales(rs.getDouble(5));
+                lista.add(modulo);
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return lista;
+    }
+    /**
+     * Método que retorna la lista de los programas registrados 
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto List con la información de los módulos requeridos
+    * @throws SQLException Retorna excepción sql.
+     * @throws Exception  Retorna excepción genérica.
+     */
+    public List<EPrograma> listarProgramas(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        List<EPrograma> lista = new ArrayList<>();
+        String query = "SELECT idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro, grupo FROM Programas";
+        if (condicion.equals("")) {
+            query += " WHERE "+condicion;
+        }
+        try {
+            Statement statement = _cnn.createStatement();            
+            rs = statement.executeQuery(query);
+            while (rs != null && rs.next()) {
+                EPrograma programa = new EPrograma();
+                programa.setIdPrograma(rs.getInt(1));
+                programa.setCodigo(rs.getString(2));
+                programa.setNombrePrograma(rs.getString(3));
+                programa.setHorasDia(rs.getInt(4));
+                programa.setHorasInicio(rs.getString(5));
+                programa.setHorasFin(rs.getString(6));
+                programa.setEstado(rs.getString(7));
+                programa.setAnio(rs.getInt(8));
+                ECentro centro = new ECentro();
+                centro.setIdCentro(rs.getInt(9));
+                programa.setCentro(centro);
+                lista.add(programa);
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return lista;
+    }
+    /**
+     * Método que retorna la lista de los profesores registrados 
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto List con la información de los módulos requeridos
+    * @throws SQLException Retorna excepción sql.
+     * @throws Exception  Retorna excepción genérica.
+     */
+    public List<EProfesor> listarProfesores(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        List<EProfesor> lista = new ArrayList<>();
+        String query = "SELECT idProfesor, nombreProfesor, apellido1Profesor, apellido2Profesor, idCentro FROM Profesores";
+        if (condicion.equals("")) {
+            query += " WHERE "+condicion;
+        }
         try {
             Statement statement = _cnn.createStatement();            
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EProfesor profesor = new EProfesor();
-                ECentro centro = new ECentro();
-                profesor.setIdPersona(rs.getLong(1));
+                profesor.setIdPersona(rs.getInt(1));
                 profesor.setNombre(rs.getString(2));
                 profesor.setApellido1(rs.getString(3));
-                if (!"".equals(rs.getString(4))) {
                 profesor.setApellido2(rs.getString(4));
-                }
-                centro.setNombre(rs.getString(5));
-                profesor.setFechaInicio(rs.getString(6));
-                profesor.setFechaFin(rs.getString(7));
+                ECentro centro = new ECentro();
+                centro.setIdCentro(rs.getInt(5));
                 profesor.setCentro(centro);
                 lista.add(profesor);
             }
