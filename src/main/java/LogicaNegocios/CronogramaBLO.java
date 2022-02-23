@@ -97,7 +97,6 @@ public class CronogramaBLO {
      * Este método se encarga redireccionar a la capa de acceso a datos para
      * usar otro método que trae de la base de datos una lista con todos los
      * profesores de un módulo de un programa.
-     *
      * @param cronograma Recibe un objeto un cronograma.
      * @return Retorna una lista de profesores.
      * @throws Exception Arroja una excepción genérica
@@ -114,9 +113,63 @@ public class CronogramaBLO {
         return lista;
 
     }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que trae de la base de datos una lista con todos los
+     * módulos registrados.
+     * @param condicion Condicion por la que se quiere filtrar en base de datos
+     * @return Objeto List con los módulos encontrados en la base de datos
+     * @throws Exception Arroja una excepción genérica
+     */
+    public List<EModulo> listarModulos(String condicion) throws Exception {
+        List<EModulo> lista = null;
 
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarModulos(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que trae de la base de datos una lista con todos los
+     * programas registrados.
+     * @param condicion Condicion por la que se quiere filtrar en base de datos
+     * @return Objeto List con los programas encontrados en la base de datos
+     * @throws Exception Arroja una excepción genérica
+     */
+    public List<EPrograma> listarProgramas(String condicion) throws Exception {
+        List<EPrograma> lista = null;
 
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarProgramas(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
+    /**
+     Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que trae de la base de datos una lista con todos los
+     * profesores registrados.
+     * @param condicion Condicion por la que se quiere filtrar en base de datos
+     * @return Objeto List con los profesores encontrados en la base de datos
+     * @throws Exception Exception Arroja una excepción genérica
+     */
+    public List<EProfesor> listarProfesores(String condicion) throws Exception {
+        List<EProfesor> lista = null;
 
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarProfesores(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
     /**
      * Este método se encarga redireccionar a la capa de acceso a datos para
      * usar otro método que trae de la base de datos un cronograma según la
@@ -265,7 +318,12 @@ public class CronogramaBLO {
         }
         return resultado;
     }
-
+    /**
+     * 
+     * @param cronograma
+     * @return
+     * @throws Exception 
+     */
     public String calcularCronograma(EModuloCronograma cronograma) throws Exception {
         Calendar calendario = Calendar.getInstance();
         EProfesor profe = new EProfesor();
@@ -330,7 +388,12 @@ public class CronogramaBLO {
         }
         return msg;
     }
-
+    /**
+     * 
+     * @param inicio
+     * @param fin
+     * @return 
+     */
     private static double obtenerHorasDia(String inicio, String fin) {
         int horaInicio = Integer.parseInt(inicio.substring(0, 2));
         int minutoInicio = Integer.parseInt(inicio.substring(3, 5));
@@ -349,7 +412,11 @@ public class CronogramaBLO {
         }
         return resultado;
     }
-
+    /**
+     * 
+     * @param fecha
+     * @return 
+     */
     private boolean revisarDia(String fecha) {
         boolean bandera = false;
 
@@ -359,7 +426,14 @@ public class CronogramaBLO {
 
         return bandera;
     }
-
+    /**
+     * 
+     * @param modulos
+     * @param cronograma
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */
     public String recibirModulos(List<EModulo> modulos, EModuloCronograma cronograma) throws SQLException, Exception {
         String mensaje = "";
         try {
@@ -374,7 +448,12 @@ public class CronogramaBLO {
 
         return mensaje;
     }
-
+    /**
+     * 
+     * @param cronograma
+     * @return
+     * @throws Exception 
+     */
     public int obtenerIdAsignacion(EModuloCronograma cronograma) throws Exception {
         int resultado;
 
