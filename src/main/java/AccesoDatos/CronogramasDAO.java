@@ -8,7 +8,6 @@ package AccesoDatos;
 import Entidades.*;
 import java.sql.*;
 import java.util.ArrayList;
-
 import java.util.List;
 
 /**
@@ -513,5 +512,10 @@ public class CronogramasDAO {
     
     public void recorrerCalendario(){
         
+    }
+    
+
+    public String getMessage() {
+        return msg;
     }
 }
