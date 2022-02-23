@@ -213,7 +213,41 @@ public class CronogramasDAO {
 
         return lista;
     }
-
+    
+//    public List<EModulo> listarModulos(String condicion) throws SQLException, Exception {
+//        ResultSet rs = null;
+//        List<EModulo> lista = new ArrayList<>();
+//        String query = "SELECT idModulo, codigo, nombreModulo, idModuloReqerido, horasTotales FROM ";
+//        try {
+//            Statement statement = _cnn.createStatement();            
+//            rs = statement.executeQuery(query);
+//            while (rs != null && rs.next()) {
+//                EProfesor profesor = new EProfesor();
+//                ECentro centro = new ECentro();
+//                profesor.setIdPersona(rs.getLong(1));
+//                profesor.setNombre(rs.getString(2));
+//                profesor.setApellido1(rs.getString(3));
+//                if (!"".equals(rs.getString(4))) {
+//                profesor.setApellido2(rs.getString(4));
+//                }
+//                centro.setNombre(rs.getString(5));
+//                profesor.setFechaInicio(rs.getString(6));
+//                profesor.setFechaFin(rs.getString(7));
+//                profesor.setCentro(centro);
+//                lista.add(profesor);
+//            }
+//
+//        } catch (SQLException sqlE) {
+//            throw sqlE;
+//        } catch (Exception e) {
+//            throw e;
+//        } finally {
+//            _cnn = null;
+//        }
+//
+//        return lista;
+//    }
+    
     /**
      * Este método devuelve un cronograma según la condición por la que se
      * quiera fitrar
@@ -288,7 +322,7 @@ public class CronogramasDAO {
      * numero de filas afectadas
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción génerica
+     * @throws Exception Arroja una excepción genérica
      */
     public int insertar(EModuloCronograma cronograma, int idAsigPr) throws SQLException, Exception {
         int result = -1;
@@ -323,7 +357,39 @@ public class CronogramasDAO {
 
         return result;
     }
+    /**
+     * Este método obtiene la identificación de la asignación de un profesor
+     * @param cronograma Parámetro que recibe objeto cronograma para filtrar los datos según sus IDs 
+     * @return Retorna un valor entero con la identificación de una asignación
+     * @throws SQLException Arroja un excepción de SQL en caso de que la base de
+     * datos tenga un fallo
+     * @throws Exception Arroja una excepción genérica
+     */
+    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws SQLException, Exception{
+        int resultado = -1;
+        
+        ResultSet rs = null;
+        String query = "Select idAsignacionProfe from AsignacionProfesor Where idModulo = "+cronograma.getModulo().getIdModulo()+" and idPrograma = "+cronograma.getPrograma().getIdPrograma()+" and idProfesor = "+cronograma.getProfesor().get(0).getIdPersona();
 
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+                
+            if (rs != null && rs.next()) {
+              resultado = rs.getInt(1);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+        
+        
+        return resultado;
+    }
+    
     /**
      * Método que asigna profesor a un modulo de un programa
      *

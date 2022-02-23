@@ -8,6 +8,7 @@ package LogicaNegocios;
 import AccesoDatos.CronogramasDAO;
 import Entidades.*;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -17,7 +18,10 @@ import java.util.List;
 public class CronogramaBLO {
 
     private String msg;
-    private CronogramasDAO ADCronograma;
+    
+    CronogramasDAO cronogramaDAO;
+    List<EDiaFeriado> listaDiasFeriados;
+    List<EDiaAusente> listaDiasAusentes;
 
     /**
      * Este método se encarga redireccionar a la capa de acceso a datos para
@@ -34,8 +38,8 @@ public class CronogramaBLO {
         List<EModuloCronograma> lista = null;
 
         try {
-            ADCronograma = new CronogramasDAO();
-            lista = ADCronograma.listar(condicion);
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listar(condicion);
         } catch (Exception e) {
             throw e;
         }
@@ -57,8 +61,8 @@ public class CronogramaBLO {
         List<EDiaFeriado> lista = null;
 
         try {
-            ADCronograma = new CronogramasDAO();
-            lista = ADCronograma.listarDias(anio);
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarDias(anio);
         } catch (Exception e) {
             throw e;
         }
@@ -81,8 +85,8 @@ public class CronogramaBLO {
         List<EDiaAusente> lista = null;
 
         try {
-            ADCronograma = new CronogramasDAO();
-            lista = ADCronograma.listarDias(profesor, fechaInicio);
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarDias(profesor, fechaInicio);
         } catch (Exception e) {
             throw e;
         }
@@ -102,8 +106,8 @@ public class CronogramaBLO {
         List<EProfesor> lista = null;
 
         try {
-            ADCronograma = new CronogramasDAO();
-            lista = ADCronograma.listar(cronograma);
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listar(cronograma);
         } catch (Exception e) {
             throw e;
         }
@@ -126,8 +130,8 @@ public class CronogramaBLO {
     public EModuloCronograma obtener(String condicion) throws Exception {
         EModuloCronograma cronograma;
         try {
-            ADCronograma = new CronogramasDAO();
-            cronograma = ADCronograma.obtener(condicion);
+            cronogramaDAO = new CronogramasDAO();
+            cronograma = cronogramaDAO.obtener(condicion);
         } catch (Exception e) {
             throw e;
         }
@@ -148,8 +152,8 @@ public class CronogramaBLO {
     public int insertar(EModuloCronograma cronograma, int idAsigPr) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.insertar(cronograma, idAsigPr);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertar(cronograma, idAsigPr);
         } catch (Exception e) {
             throw e;
         }
@@ -167,8 +171,8 @@ public class CronogramaBLO {
     public int insertar(EModuloCronograma cronograma) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.insertar(cronograma);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertar(cronograma);
         } catch (Exception e) {
             throw e;
         }
@@ -189,8 +193,8 @@ public class CronogramaBLO {
     public int actualizar(EModuloCronograma cronograma, int idAsigPr) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.actualizar(cronograma, idAsigPr);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizar(cronograma, idAsigPr);
         } catch (Exception e) {
             throw e;
         }
@@ -211,8 +215,8 @@ public class CronogramaBLO {
     public int actualizar(EModuloCronograma cronograma) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.actualizar(cronograma);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizar(cronograma);
         } catch (Exception e) {
             throw e;
         }
@@ -233,8 +237,8 @@ public class CronogramaBLO {
     public int eliminar(EModuloCronograma cronograma) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.eliminar(cronograma);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminar(cronograma);
         } catch (Exception e) {
             throw e;
         }
@@ -254,11 +258,133 @@ public class CronogramaBLO {
     public int eliminar(int idPrograma) throws Exception {
         int resultado;
         try {
-            ADCronograma = new CronogramasDAO();
-            resultado = ADCronograma.eliminar(idPrograma);
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminar(idPrograma);
         } catch (Exception e) {
             throw e;
         }
+        return resultado;
+    }
+
+    public String calcularCronograma(EModuloCronograma cronograma) throws Exception {
+        Calendar calendario = Calendar.getInstance();
+        EProfesor profe = new EProfesor();
+        boolean existe = false;
+
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));
+            int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));
+            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4));
+            listaDiasFeriados = cronogramaDAO.listarDias(anio);
+            profe = cronograma.getProfesor().get(0);
+            listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());
+            double horaDia = 0;
+            double horasPorDia = obtenerHorasDia(cronograma.getHoraInicio(), cronograma.getHoraFin());
+            int contadorHoras = 0;
+            for (int i = mesInicio; i < 12; i++) {
+                calendario.set(anio, i, 1);
+                int lastDay = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+                int x = 0;
+                if ((mesInicio) == i) {
+                    x = dia;
+                } else {
+                    x = 1;
+                }
+                for (; x <= lastDay; x++) {
+
+                    if (contadorHoras == cronograma.getModulo().getHorasTotales()) {
+                        cronograma.setFechaFin(anio + "/" + i + "/" + x);
+                        break;
+                    } else {
+                        if (i == 12 && x == 31) {
+                            anio++;
+                            listaDiasFeriados = cronogramaDAO.listarDias(anio);
+                        }
+                        if (!revisarDia(anio + "/" + i + "/" + x)) {
+                            contadorHoras += horasPorDia;
+                        }
+
+                    }
+                }
+
+                if (cronogramaDAO.obtener("idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma()) != null) {
+                    int ac1 = actualizar(cronograma);//Updates
+                    if (ac1 > -1) {
+                        int actCro = actualizar(cronograma, ac1);
+                        msg = "Cronograma calculado y insertado";
+                    }
+                } else {
+                    int insAsig = insertar(cronograma);//Inserts
+                    if (insAsig > -1) {
+                        int insCro = insertar(cronograma, insAsig);
+                        msg = "Cronograma calculado y modificado";
+                    }
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+        return msg;
+    }
+
+    private static double obtenerHorasDia(String inicio, String fin) {
+        int horaInicio = Integer.parseInt(inicio.substring(0, 2));
+        int minutoInicio = Integer.parseInt(inicio.substring(3, 5));
+        int horaFin = Integer.parseInt(fin.substring(0, 2));
+        int minutoFin = Integer.parseInt(fin.substring(3, 5));
+        double resultado = 0;
+        if (minutoInicio != 0 && ((horaInicio + 1) == horaFin)) {
+            return 0.5;
+        }
+        while (horaInicio < horaFin) {
+            resultado++;
+            horaInicio++;
+        }
+        if (minutoInicio != minutoFin) {
+            resultado += 0.5;
+        }
+        return resultado;
+    }
+
+    private boolean revisarDia(String fecha) {
+        boolean bandera = false;
+
+        if (listaDiasAusentes.contains(fecha) || listaDiasFeriados.contains(fecha)) {
+            bandera = true;
+        }
+
+        return bandera;
+    }
+
+    public String recibirModulos(List<EModulo> modulos, EModuloCronograma cronograma) throws SQLException, Exception {
+        String mensaje = "";
+        try {
+            for (EModulo modulo : modulos) {
+                cronograma.setModulo(modulo);
+                calcularCronograma(cronograma);
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return mensaje;
+    }
+
+    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws Exception {
+        int resultado;
+
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.obtenerIdAsignacion(cronograma);
+        } catch (Exception e) {
+            throw e;
+        }
+
         return resultado;
     }
 
