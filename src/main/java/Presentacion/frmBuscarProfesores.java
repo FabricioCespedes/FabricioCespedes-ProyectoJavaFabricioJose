@@ -35,7 +35,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         try {
-            llenarTable("");
+            llenarTabla("");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -215,7 +215,8 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             long id = (long) txtId.getValue();
             if (id > 0) {
                 String condicion = " idProfesor = " + id;
-                llenarTable(condicion);
+                llenarTabla(condicion);
+                limpiarTextos();
             } else {
                 JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en la identificacion");
             }
@@ -224,13 +225,19 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
         }
     }//GEN-LAST:event_btnBuscarIdActionPerformed
-
+    
+    private void limpiarTextos(){
+        txtId.setValue(0);
+        txtNombre.setText("");
+    }
+    
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void brnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnLimpiarActionPerformed
         try {
-            llenarTable("");
+            llenarTabla("");
+            limpiarTextos();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -241,7 +248,8 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             String nombre = txtNombre.getText();
             if (!nombre.equals("")) {
                 String condicion = " nombreProfesor like '%" + nombre + "%'";
-                llenarTable(condicion);
+                llenarTabla(condicion);
+                limpiarTextos();
             } else {
                 JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en el nombre");
             }
@@ -303,7 +311,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         });
     }
 
-    private void llenarTable(String condition) throws Exception {
+    private void llenarTabla(String condition) throws Exception {
         CronogramaBLO cronogramaBLO = new CronogramaBLO();
 
         Object[] row = new Object[4];

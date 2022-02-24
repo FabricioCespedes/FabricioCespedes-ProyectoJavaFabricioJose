@@ -4,8 +4,6 @@
  */
 package Entidades;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author josea
@@ -17,6 +15,11 @@ public class EModulo {
     private String estado;
     private EModulo moduloRequerido;
     private double horasTotales;
+
+    @Override
+    public String toString() {
+        return  nombreModulo + " "+ "Codigo=" + " " + codigo  ;
+    }
 
     public int getIdModulo() {
         return idModulo;

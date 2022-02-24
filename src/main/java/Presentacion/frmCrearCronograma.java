@@ -4,9 +4,18 @@
  */
 package Presentacion;
 
+import Entidades.EModuloCronograma;
+import Entidades.EPrograma;
+import LogicaNegocios.CronogramaBLO;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,6 +23,9 @@ import javax.swing.JOptionPane;
  */
 public class frmCrearCronograma extends javax.swing.JDialog {
 
+    ArrayList<EModuloCronograma> listaModulosProgramas = new ArrayList<>();
+    DefaultTableModel modelo;
+    EPrograma programa;
     /**
      * Creates new form frmCrearCronograma
      */
@@ -34,14 +46,17 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaModulosProgramas = new javax.swing.JTable();
         btnModulo = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnBuscarPrograma = new javax.swing.JButton();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -50,7 +65,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaModulosProgramas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -61,7 +76,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaModulosProgramas);
 
         btnModulo.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnModulo.setText("Añadir modulo");
@@ -77,19 +92,21 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 997, Short.MAX_VALUE)
-                    .addComponent(btnModulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnModulo, javax.swing.GroupLayout.PREFERRED_SIZE, 997, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 997, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnModulo, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGap(60, 60, 60)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(105, 105, 105))
+                .addGap(63, 63, 63))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -102,11 +119,11 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             }
         });
 
-        jTextField4.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jTextField4.setEnabled(false);
+        txtNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        txtNombre.setEnabled(false);
 
-        jTextField3.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jTextField3.setEnabled(false);
+        txtCodigo.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        txtCodigo.setEnabled(false);
 
         jLabel3.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jLabel3.setText("Código");
@@ -124,25 +141,53 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                 .addGap(31, 31, 31)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBuscarPrograma)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
                         .addComponent(jLabel4)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscarPrograma))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel5.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        jLabel5.setText("Fecha de inicio");
+
+        jSpinner1.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.DAY_OF_WEEK));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(388, 388, 388)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -151,7 +196,10 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 12, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
@@ -159,7 +207,9 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -205,16 +255,16 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -228,7 +278,11 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent wE) {
                 try {
-
+                    programa = vistaBuscarProgramas.getPrograma();
+                    if (programa != null) {
+                        txtNombre.setText(programa.getNombrePrograma());
+                        txtCodigo.setText(programa.getCodigo());
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                 }
@@ -246,7 +300,10 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent wE) {
                 try {
-
+                    if (vistaAddModulo.getModuloCronograma() != null) {
+                        listaModulosProgramas.add(vistaAddModulo.getModuloCronograma());
+                        llenarTabla("");
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                 }
@@ -255,6 +312,50 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         });
         vistaAddModulo.setVisible(true);
     }//GEN-LAST:event_btnModuloActionPerformed
+
+    private void llenarTabla(String condition) throws Exception {
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+
+        Object[] row = new Object[5];
+
+        limpiarTabla();
+        try {
+            for (EModuloCronograma cronograma : listaModulosProgramas) {
+                row[0] = cronograma.getProfesor().get(0);
+                row[1] = cronograma.getModulo();
+                row[2] = cronograma.getHoraInicio();
+                row[3] = cronograma.getHoraFin();
+                row[4] = cronograma.getEstado();
+
+                modelo.addRow(row);
+                tablaModulosProgramas.setFont(new java.awt.Font("Tahoma", 0, 14));
+                tablaModulosProgramas.setRowHeight(40);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private void limpiarTabla() {
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int colum) {
+                return false;
+            }
+        };
+        modelo.addColumn("Profesor");
+        modelo.addColumn("Modulos");
+        modelo.addColumn("Hora inicio");
+        modelo.addColumn("Hora fin");
+        modelo.addColumn("Estado");
+        tablaModulosProgramas.getTableHeader().setFont(new Font("Cooper Black", 1, 16));
+        tablaModulosProgramas.getTableHeader().setBackground(Color.cyan);
+        tablaModulosProgramas.getTableHeader().setForeground(Color.BLACK);
+        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+        tcr.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaModulosProgramas.getColumnModel().getColumn(0).setCellRenderer(tcr);
+        tablaModulosProgramas.setModel(modelo);
+    }
 
     /**
      * @param args the command line arguments
@@ -305,13 +406,16 @@ public class frmCrearCronograma extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JTable tablaModulosProgramas;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

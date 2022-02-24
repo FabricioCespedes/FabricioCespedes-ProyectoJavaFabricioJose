@@ -4,7 +4,15 @@
  */
 package Presentacion;
 
+import Entidades.EPrograma;
+import LogicaNegocios.CronogramaBLO;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -12,12 +20,22 @@ import javax.swing.JOptionPane;
  */
 public class frmBuscarProgramas extends javax.swing.JDialog {
 
-    /**
-     * Creates new form frmBuscarProgramas
-     */
+    List<EPrograma> lista;
+    DefaultTableModel modelo;
+
+    public EPrograma getPrograma() {
+        return programa;
+    }
+    EPrograma programa;
+
     public frmBuscarProgramas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        try {
+            llenarTabla("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }
 
     /**
@@ -38,7 +56,8 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
         btnBuscarNombre = new javax.swing.JButton();
         txtNombre = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaProfesores = new javax.swing.JTable();
+        tablaProgramas = new javax.swing.JTable();
+        btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -70,6 +89,11 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
 
         btnBuscarNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarNombre.setText("Buscar");
+        btnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarNombreActionPerformed(evt);
+            }
+        });
 
         txtNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
 
@@ -115,7 +139,7 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProgramas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -126,7 +150,20 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tablaProfesores);
+        tablaProgramas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaProgramasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaProgramas);
+
+        btnLimpiar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,7 +174,8 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnRegresar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
@@ -148,8 +186,10 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnLimpiar)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(178, Short.MAX_VALUE))
         );
 
         pack();
@@ -161,11 +201,58 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
 
     private void btnBuscarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCodigoActionPerformed
         try {
-            String codigo =  txtCodigo.getText();
+            String codigo = txtCodigo.getText();
+            if (!codigo.equals("")) {
+                String condicion = " codigo like UPPER('%" + codigo + "%')";
+                llenarTabla(condicion);
+                limpiarTextos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun codigo para realizar la busqueda");
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
         }
     }//GEN-LAST:event_btnBuscarCodigoActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+       try {
+            llenarTabla("");
+            limpiarTextos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarNombreActionPerformed
+        try {
+            String nombre = txtNombre.getText();
+            if (!nombre.equals("")) {
+                String condicion = " nombrePrograma like '%" + nombre + "%'";
+                llenarTabla(condicion);
+                limpiarTextos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en el nombre");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
+        }
+
+    }//GEN-LAST:event_btnBuscarNombreActionPerformed
+
+    private void tablaProgramasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProgramasMouseClicked
+        if (evt.getClickCount() == 2) {
+            int row = tablaProgramas.rowAtPoint(evt.getPoint());
+            programa = (EPrograma) tablaProgramas.getValueAt(row, 0);
+
+            this.dispose();
+        }
+    }//GEN-LAST:event_tablaProgramasMouseClicked
+
+    private void limpiarTextos() {
+        txtCodigo.setText("");
+        txtNombre.setText("");
+    }
 
     /**
      * @param args the command line arguments
@@ -208,16 +295,53 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
             }
         });
     }
+        private void llenarTabla(String condition) throws Exception {
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+
+        Object[] row = new Object[4];
+
+        limpiarTabla();
+        try {
+            lista = cronogramaBLO.listarProgramas(condition);
+            for (EPrograma programaNew : lista) {
+                row[0] = programaNew;
+                modelo.addRow(row);
+                tablaProgramas.setFont(new java.awt.Font("Tahoma", 0, 14));
+                tablaProgramas.setRowHeight(40);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private void limpiarTabla() {
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int colum) {
+                return false;
+            }
+        };
+        modelo.addColumn("Modulos");
+        tablaProgramas.getTableHeader().setFont(new Font("Cooper Black", 1, 16));
+        tablaProgramas.getTableHeader().setBackground(Color.cyan);
+        tablaProgramas.getTableHeader().setForeground(Color.BLACK);
+        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+        tcr.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaProgramas.getColumnModel().getColumn(0).setCellRenderer(tcr);
+        tablaProgramas.setModel(modelo);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCodigo;
     private javax.swing.JButton btnBuscarNombre;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaProfesores;
+    private javax.swing.JTable tablaProgramas;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

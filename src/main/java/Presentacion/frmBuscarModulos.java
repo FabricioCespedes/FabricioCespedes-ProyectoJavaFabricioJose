@@ -4,7 +4,15 @@
  */
 package Presentacion;
 
+import Entidades.EModulo;
+import LogicaNegocios.CronogramaBLO;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -12,12 +20,25 @@ import javax.swing.JOptionPane;
  */
 public class frmBuscarModulos extends javax.swing.JDialog {
 
+    List<EModulo> lista;
+    DefaultTableModel modelo;
+    EModulo modulo;
+
+    public EModulo getModulo() {
+        return modulo;
+    }
+
     /**
      * Creates new form frmBuscarModulos
      */
     public frmBuscarModulos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        try {
+            llenarTabla("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }
 
     /**
@@ -30,7 +51,7 @@ public class frmBuscarModulos extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaProfesores = new javax.swing.JTable();
+        tablaModulos = new javax.swing.JTable();
         btnRegresar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -39,10 +60,11 @@ public class frmBuscarModulos extends javax.swing.JDialog {
         btnBuscarCodigo = new javax.swing.JButton();
         btnBuscarNombre = new javax.swing.JButton();
         txtNombre = new javax.swing.JTextField();
+        btnRegresar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
+        tablaModulos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -53,7 +75,12 @@ public class frmBuscarModulos extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tablaProfesores);
+        tablaModulos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaModulosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaModulos);
 
         btnRegresar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnRegresar.setText("Regresar");
@@ -83,6 +110,11 @@ public class frmBuscarModulos extends javax.swing.JDialog {
 
         btnBuscarNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarNombre.setText("Buscar");
+        btnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarNombreActionPerformed(evt);
+            }
+        });
 
         txtNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
 
@@ -128,6 +160,14 @@ public class frmBuscarModulos extends javax.swing.JDialog {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        btnRegresar1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnRegresar1.setText("Limpiar");
+        btnRegresar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,7 +177,8 @@ public class frmBuscarModulos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnRegresar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addComponent(btnRegresar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -145,11 +186,13 @@ public class frmBuscarModulos extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRegresar)
                 .addGap(18, 18, 18)
+                .addComponent(btnRegresar1)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pack();
@@ -158,14 +201,97 @@ public class frmBuscarModulos extends javax.swing.JDialog {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnRegresarActionPerformed
-
+    private void limpiarTextos()
+    {
+        txtCodigo.setText("");
+        txtNombre.setText("");
+    }
     private void btnBuscarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCodigoActionPerformed
         try {
-            String codigo =  txtCodigo.getText();
+            String codigo = txtCodigo.getText();
+            if (!codigo.equals("")) {
+                String condicion = " codigo like UPPER('%" + codigo + "%')";
+                llenarTabla(condicion);
+                limpiarTextos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun codigo para realizar la busqueda");
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
         }
     }//GEN-LAST:event_btnBuscarCodigoActionPerformed
+
+    private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
+        try {
+            llenarTabla("");
+            limpiarTextos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnRegresar1ActionPerformed
+
+    private void btnBuscarNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarNombreActionPerformed
+        try {
+            String nombre = txtNombre.getText();
+            if (!nombre.equals("")) {
+                String condicion = " nombreModulo like '%" + nombre + "%'";
+                llenarTabla(condicion);
+                limpiarTextos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe de ingresar algun valor en el nombre");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
+        }
+    }//GEN-LAST:event_btnBuscarNombreActionPerformed
+
+    private void tablaModulosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaModulosMouseClicked
+        if (evt.getClickCount() == 2) {
+            int row = tablaModulos.rowAtPoint(evt.getPoint());
+            modulo = (EModulo) tablaModulos.getValueAt(row, 0);
+
+            this.dispose();
+        }
+    }//GEN-LAST:event_tablaModulosMouseClicked
+
+    private void llenarTabla(String condition) throws Exception {
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+
+        Object[] row = new Object[4];
+
+        limpiarTabla();
+        try {
+            lista = cronogramaBLO.listarModulos(condition);
+            for (EModulo modulo : lista) {
+                row[0] = modulo;
+                modelo.addRow(row);
+                tablaModulos.setFont(new java.awt.Font("Tahoma", 0, 14));
+                tablaModulos.setRowHeight(40);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private void limpiarTabla() {
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int colum) {
+                return false;
+            }
+        };
+        modelo.addColumn("Modulos");
+        tablaModulos.getTableHeader().setFont(new Font("Cooper Black", 1, 16));
+        tablaModulos.getTableHeader().setBackground(Color.cyan);
+        tablaModulos.getTableHeader().setForeground(Color.BLACK);
+        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+        tcr.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaModulos.getColumnModel().getColumn(0).setCellRenderer(tcr);
+        tablaModulos.setModel(modelo);
+    }
 
     /**
      * @param args the command line arguments
@@ -213,11 +339,12 @@ public class frmBuscarModulos extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscarCodigo;
     private javax.swing.JButton btnBuscarNombre;
     private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnRegresar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaProfesores;
+    private javax.swing.JTable tablaModulos;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

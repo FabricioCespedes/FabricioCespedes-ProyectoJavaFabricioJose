@@ -78,7 +78,7 @@ public class CronogramasDAO {
                 programa.setIdPrograma(rs.getInt(12));
                 programa.setCodigo(rs.getString(13));
                 programa.setNombrePrograma(rs.getString(14));
-                programa.setHorasDia(rs.getInt(15));
+                programa.setHorasDia(rs.getString(15));
                 programa.setHorasInicio(rs.getString(16));
                 programa.setHorasFin(rs.getString(17));
                 programa.setEstado(rs.getString(18));
@@ -224,7 +224,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EModulo> lista = new ArrayList<>();
         String query = "SELECT idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales FROM Modulos";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {
@@ -263,7 +263,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         List<EPrograma> lista = new ArrayList<>();
         String query = "SELECT idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro, grupo FROM Programas";
-        if (condicion.equals("")) {
+        if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
         try {
@@ -274,7 +274,7 @@ public class CronogramasDAO {
                 programa.setIdPrograma(rs.getInt(1));
                 programa.setCodigo(rs.getString(2));
                 programa.setNombrePrograma(rs.getString(3));
-                programa.setHorasDia(rs.getInt(4));
+                programa.setHorasDia(rs.getString(4));
                 programa.setHorasInicio(rs.getString(5));
                 programa.setHorasFin(rs.getString(6));
                 programa.setEstado(rs.getString(7));
@@ -379,7 +379,7 @@ public class CronogramasDAO {
                 programa.setIdPrograma(rs.getInt(12));
                 programa.setCodigo(rs.getString(13));
                 programa.setNombrePrograma(rs.getString(14));
-                programa.setHorasDia(rs.getInt(15));
+                programa.setHorasDia(rs.getString(15));
                 programa.setHorasInicio(rs.getString(16));
                 programa.setHorasFin(rs.getString(17));
                 programa.setEstado(rs.getString(18));

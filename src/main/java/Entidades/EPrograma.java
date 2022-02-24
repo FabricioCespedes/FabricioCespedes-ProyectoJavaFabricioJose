@@ -18,13 +18,13 @@ public class EPrograma {
     private String fechaFin;
     private String horasInicio;
     private String horasFin;
-    private int horasDia;
+    private String horasDia;
 
-    public int getHorasDia() {
+    public String getHorasDia() {
         return horasDia;
     }
 
-    public void setHorasDia(int horasDia) {
+    public void setHorasDia(String horasDia) {
         this.horasDia = horasDia;
     }
     private String estado;
@@ -134,7 +134,12 @@ public class EPrograma {
     public EPrograma() {
     }
 
-    public EPrograma(int idPrograma, String codigo, String nombrePrograma, String fechaInicio, String fechaFin, String horasInicio, String horasFin, int horasDia, String estado, int anio, int grupo, ECentro centro, ArrayList<EDia> dia) {
+    @Override
+    public String toString() {
+        return nombrePrograma + "  codigo " + codigo; 
+    }
+
+    public EPrograma(int idPrograma, String codigo, String nombrePrograma, String fechaInicio, String fechaFin, String horasInicio, String horasFin, String horasDia, String estado, int anio, int grupo, ECentro centro, ArrayList<EDia> dia) {
         this.idPrograma = idPrograma;
         this.codigo = codigo;
         this.nombrePrograma = nombrePrograma;

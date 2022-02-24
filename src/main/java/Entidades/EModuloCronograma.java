@@ -17,13 +17,16 @@ public class EModuloCronograma {
     private String horaFin;
     private String estado;
     private EModulo modulo;
-    private ArrayList<EProfesor> profesor;
+    private ArrayList<EProfesor> listaProfesores = new ArrayList<>();
     private EPrograma programa;
 
     public String getFechaInicio() {
         return fechaInicio;
     }
-
+    
+    public void agregarProfesor(EProfesor profesor){
+        listaProfesores.add(profesor);
+    }
     public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
@@ -77,11 +80,11 @@ public class EModuloCronograma {
     }
 
     public ArrayList<EProfesor> getProfesor() {
-        return profesor;
+        return listaProfesores;
     }
 
     public void setProfesor(ArrayList<EProfesor> profesor) {
-        this.profesor = profesor;
+        this.listaProfesores = profesor;
     }
     
 
@@ -96,7 +99,7 @@ public class EModuloCronograma {
     public EModuloCronograma() {
     }
     
-    public EModuloCronograma(String fechaInicio, String fechaFin, String horasDia, String horaInicio, String horaFin, String estado, EModulo modulo, ArrayList<EProfesor> profesor, EPrograma programa) {
+    public EModuloCronograma(String fechaInicio, String fechaFin, String horasDia, String horaInicio, String horaFin, String estado, EModulo modulo,  EPrograma programa) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.horasDia = horasDia;
@@ -104,9 +107,9 @@ public class EModuloCronograma {
         this.horaFin = horaFin;
         this.estado = estado;
         this.modulo = modulo;
-        this.profesor = profesor;
         this.programa = programa;
     }
+
 
     
     
