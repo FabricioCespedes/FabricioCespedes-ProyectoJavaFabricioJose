@@ -299,6 +299,19 @@ public class CronogramaBLO {
 
     }
     
+    public List<EMotivoAusencia> listarMotivos(String condicion) throws Exception {
+        List<EMotivoAusencia> lista = null;
+
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarMotivos(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    
+    }
+    
     /**
      * 
      * @param motivo
@@ -384,7 +397,7 @@ public class CronogramaBLO {
             cronogramaDAO = new CronogramasDAO(); //Instancia de CronogramasDAO para acceder a la capa de datos.
             int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su mes de inicio.
             int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su día de inicio.
-            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4)); //Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
+            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
             listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se listan los días feriados del año.
             profe = cronograma.getProfesor().get(0);//El objeto profesor se le asigna el primer profesor del ArrayList profesores del cronograma.
             listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());//Se listan los dias que está ausente el profeosr
@@ -516,5 +529,19 @@ public class CronogramaBLO {
 
         return resultado;
     }
+    
+    
+    public EMotivoAusencia obtenerMotivo(String condicion) throws Exception {
+        EMotivoAusencia motivo;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            motivo = cronogramaDAO.obtenerMotivo(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return motivo;
+    
+    }
+    
 
 }

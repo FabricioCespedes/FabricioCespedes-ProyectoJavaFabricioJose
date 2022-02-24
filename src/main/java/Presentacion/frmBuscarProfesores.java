@@ -218,6 +218,7 @@ this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
 
         //  clearTable();
         try {
+            
 //            list = cronogramaBLO.listar(condition);
 //            for (Client client : list) {
 //                row[0] = client.getId_client();
