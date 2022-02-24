@@ -22,12 +22,12 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
 
     List<EPrograma> lista;
     DefaultTableModel modelo;
-
-    public EPrograma getPrograma() {
+    EPrograma programa;
+    public EPrograma getPrograma(){
         return programa;
     }
-    EPrograma programa;
-
+    
+    
     public frmBuscarProgramas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -216,7 +216,7 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBuscarCodigoActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-       try {
+        try {
             llenarTabla("");
             limpiarTextos();
         } catch (Exception e) {
@@ -295,7 +295,8 @@ public class frmBuscarProgramas extends javax.swing.JDialog {
             }
         });
     }
-        private void llenarTabla(String condition) throws Exception {
+
+    private void llenarTabla(String condition) throws Exception {
         CronogramaBLO cronogramaBLO = new CronogramaBLO();
 
         Object[] row = new Object[4];

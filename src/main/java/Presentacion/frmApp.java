@@ -39,12 +39,29 @@ public class frmApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
         deskotPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         menuItemSalir = new javax.swing.JMenuItem();
         menuCrono = new javax.swing.JMenu();
         menuItemCrono = new javax.swing.JMenuItem();
+        menuAusencias = new javax.swing.JMenu();
+        menuItemVacaciones = new javax.swing.JMenuItem();
+        menuItemIncapacidades = new javax.swing.JMenuItem();
+        menuItemFeriados = new javax.swing.JMenuItem();
+        menuItemMotivos = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de cronograma INA");
@@ -87,6 +104,56 @@ public class frmApp extends javax.swing.JFrame {
 
         menuBar.add(menuCrono);
 
+        menuAusencias.setMnemonic('e');
+        menuAusencias.setText("Ausencias");
+        menuAusencias.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        menuItemVacaciones.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemVacaciones.setMnemonic('t');
+        menuItemVacaciones.setText("Administrar Vacaciones");
+        menuItemVacaciones.setToolTipText("Administre en esta opcion las vacaciones de los profesores (almacenar,ver, actualizar y eliminar)");
+        menuItemVacaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemVacacionesActionPerformed(evt);
+            }
+        });
+        menuAusencias.add(menuItemVacaciones);
+
+        menuItemIncapacidades.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemIncapacidades.setMnemonic('t');
+        menuItemIncapacidades.setText("Administrar Incapacidades");
+        menuItemIncapacidades.setToolTipText("Administre en esta opcion las incapacidades de los profesores (almacenar,ver, actualizar y eliminar)");
+        menuItemIncapacidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemIncapacidadesActionPerformed(evt);
+            }
+        });
+        menuAusencias.add(menuItemIncapacidades);
+
+        menuItemFeriados.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemFeriados.setMnemonic('t');
+        menuItemFeriados.setText("Administrar Feriados");
+        menuItemFeriados.setToolTipText("Administre en esta opcion las incapacidades de los profesores (almacenar,ver, actualizar y eliminar)");
+        menuItemFeriados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemFeriadosActionPerformed(evt);
+            }
+        });
+        menuAusencias.add(menuItemFeriados);
+
+        menuItemMotivos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemMotivos.setMnemonic('t');
+        menuItemMotivos.setText("Administrar Motivos");
+        menuItemMotivos.setToolTipText("Administre en esta opcion las incapacidades de los profesores (almacenar,ver, actualizar y eliminar)");
+        menuItemMotivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemMotivosActionPerformed(evt);
+            }
+        });
+        menuAusencias.add(menuItemMotivos);
+
+        menuBar.add(menuAusencias);
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -115,6 +182,42 @@ public class frmApp extends javax.swing.JFrame {
         vistaCronograma.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
         vistaCronograma.setVisible(true);
     }//GEN-LAST:event_menuItemCronoActionPerformed
+
+    private void menuItemVacacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVacacionesActionPerformed
+        frmVacaciones vistaVacaciones = new frmVacaciones();
+        deskotPane.add(vistaVacaciones);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaVacaciones.getSize();
+        vistaVacaciones.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaVacaciones.setVisible(true);
+    }//GEN-LAST:event_menuItemVacacionesActionPerformed
+
+    private void menuItemIncapacidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemIncapacidadesActionPerformed
+        frmIncapacidades vistaIncapacidades = new frmIncapacidades();
+        deskotPane.add(vistaIncapacidades);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaIncapacidades.getSize();
+        vistaIncapacidades.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaIncapacidades.setVisible(true);
+    }//GEN-LAST:event_menuItemIncapacidadesActionPerformed
+
+    private void menuItemFeriadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemFeriadosActionPerformed
+        frmFeriados vistaFeriados = new frmFeriados();
+        deskotPane.add(vistaFeriados);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaFeriados.getSize();
+        vistaFeriados.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaFeriados.setVisible(true);
+    }//GEN-LAST:event_menuItemFeriadosActionPerformed
+
+    private void menuItemMotivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemMotivosActionPerformed
+        frmMotivos vistaMotivos = new frmMotivos();
+        deskotPane.add(vistaMotivos);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaMotivos.getSize();
+        vistaMotivos.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaMotivos.setVisible(true);
+    }//GEN-LAST:event_menuItemMotivosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,11 +258,20 @@ public class frmApp extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane deskotPane;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu menuArchivo;
+    private javax.swing.JMenu menuAusencias;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCrono;
     private javax.swing.JMenuItem menuItemCrono;
+    private javax.swing.JMenuItem menuItemFeriados;
+    private javax.swing.JMenuItem menuItemIncapacidades;
+    private javax.swing.JMenuItem menuItemMotivos;
     private javax.swing.JMenuItem menuItemSalir;
+    private javax.swing.JMenuItem menuItemVacaciones;
     // End of variables declaration//GEN-END:variables
 
 }

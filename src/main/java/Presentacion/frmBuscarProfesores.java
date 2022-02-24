@@ -22,15 +22,8 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
     List<EProfesor> list;
     DefaultTableModel modelo;
-    EProfesor profesor = new EProfesor();
+    EProfesor profesor ;
 
-    public EProfesor getProfesor() {
-        return profesor;
-    }
-
-    /**
-     * Creates new form frmBuscarProfesores
-     */
     public frmBuscarProfesores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -39,6 +32,10 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
+    }
+
+    public EProfesor getProfesor() {
+        return profesor;
     }
 
     /**
@@ -60,7 +57,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProfesores = new javax.swing.JTable();
         btnRegresar = new javax.swing.JButton();
-        brnLimpiar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -74,11 +71,9 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
         txtId.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         txtId.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 0L));
-        txtId.setToolTipText("Debe de ingresar la cedula completa");
         txtId.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         txtNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        txtNombre.setToolTipText("Busque por nombre o apellidos");
 
         btnBuscarId.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarId.setText("Buscar");
@@ -90,11 +85,6 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
 
         btnBuscarNombre.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         btnBuscarNombre.setText("Buscar");
-        btnBuscarNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarNombreActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,27 +126,17 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        tablaProfesores.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tablaProfesores.setToolTipText("Precione doble click para seleccionar un profesor");
+        ));
         tablaProfesores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaProfesoresMouseClicked(evt);
@@ -172,11 +152,11 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             }
         });
 
-        brnLimpiar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        brnLimpiar.setText("Limpiar");
-        brnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+        btnLimpiar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                brnLimpiarActionPerformed(evt);
+                btnLimpiarActionPerformed(evt);
             }
         });
 
@@ -190,7 +170,7 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
                     .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(brnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -200,11 +180,11 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(brnLimpiar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpiar)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
@@ -225,12 +205,12 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Ha ocorrido un error");
         }
     }//GEN-LAST:event_btnBuscarIdActionPerformed
-    
-    private void limpiarTextos(){
+
+    private void limpiarTextos() {
         txtId.setValue(0);
         txtNombre.setText("");
     }
-    
+
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose();    }//GEN-LAST:event_btnRegresarActionPerformed
 
@@ -268,6 +248,14 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_tablaProfesoresMouseClicked
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        try {
+            llenarTabla("");
+            limpiarTextos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }      }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -329,8 +317,9 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
             throw e;
         }
     }
-
-    private void limpiarTabla() {
+    
+    
+        private void limpiarTabla() {
         modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int colum) {
@@ -347,9 +336,9 @@ public class frmBuscarProfesores extends javax.swing.JDialog {
         tablaProfesores.setModel(modelo);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton brnLimpiar;
     private javax.swing.JButton btnBuscarId;
     private javax.swing.JButton btnBuscarNombre;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
