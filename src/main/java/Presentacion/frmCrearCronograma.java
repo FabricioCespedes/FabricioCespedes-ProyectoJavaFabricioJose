@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -344,7 +345,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                             if (vistaAddModulo.isBorrar()) {
                                 listaModulosProgramas.remove(row);
                             } else {
-                                
+
                                 listaModulosProgramas.set(row, vistaAddModulo.getModuloCronograma());
                             }
                             llenarTabla("");
@@ -363,7 +364,9 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         try {
             if (!listaModulosProgramas.isEmpty()) {
                 CronogramaBLO cronogramaBLO = new CronogramaBLO();
-                String msj = cronogramaBLO.recibirModulos(listaModulosProgramas,txtfecha.getValue().toString()  );
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+                String msj = cronogramaBLO.recibirModulos(listaModulosProgramas, formatter.format(txtfecha.getValue()));
             } else {
                 JOptionPane.showMessageDialog(null, "Debe de ingresar modulos para calcular el cronograma");
             }

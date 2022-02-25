@@ -404,16 +404,16 @@ public class CronogramaBLO {
      * @return Una cadena diciendo si el proceso se realizó correctamente.
      * @throws Exception Arroja una excepción genérica
      */
-    public String calcularCronograma(EModuloCronograma cronograma) throws Exception {
+    public String calcularCronograma(EModuloCronograma cronograma, String fechaInicio) throws Exception {
         Calendar calendario = Calendar.getInstance(); //Calendario que se va a rrecorrer
         EProfesor profe = new EProfesor(); //Objeto profesor que se usa en la evaluación 
         boolean existe = false;
 
         try {
             cronogramaDAO = new CronogramasDAO(); //Instancia de CronogramasDAO para acceder a la capa de datos.
-            int mesInicio = Integer.parseInt(cronograma.getFechaInicio().substring(5, 7));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su mes de inicio.
-            int dia = Integer.parseInt(cronograma.getFechaInicio().substring(8, 10));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su día de inicio.
-            int anio = Integer.parseInt(cronograma.getFechaInicio().substring(0, 4));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
+            int mesInicio = Integer.parseInt(fechaInicio.substring(5, 7));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su mes de inicio.
+            int dia = Integer.parseInt(fechaInicio.substring(8, 10));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su día de inicio.
+            int anio = Integer.parseInt(fechaInicio.substring(0, 4));//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
             listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se listan los días feriados del año.
             profe = cronograma.getProfesor().get(0);//El objeto profesor se le asigna el primer profesor del ArrayList profesores del cronograma.
             listaDiasAusentes = cronogramaDAO.listarDias(profe, cronograma.getFechaInicio());//Se listan los dias que está ausente el profeosr
@@ -526,7 +526,7 @@ public class CronogramaBLO {
         try {
             listaModulos = ordenarListaModulos(listaModulos);
             for (EModuloCronograma modulo : listaModulos) {
-                calcularCronograma(modulo);
+                calcularCronograma(modulo, fechaInicio);
             }
 
         } catch (Exception e) {
@@ -578,10 +578,9 @@ public class CronogramaBLO {
                 listaOrdenada.add(modulo);
                 listaModulos.remove(modulo);
                 i=0;
-                y++;
                 continue;
             }
-            if (y > 0) {
+            if (!listaOrdenada.isEmpty()) {
                 if (modulo.getModulo().getModuloRequerido().getIdModulo() == listaOrdenada.get(y).getModulo().getIdModulo()) {
                     listaOrdenada.add(modulo);
                     listaModulos.remove(modulo);
@@ -598,7 +597,7 @@ public class CronogramaBLO {
             }
 
         }
-        return listaModulos;
+        return listaOrdenada;
     }
 
 }
