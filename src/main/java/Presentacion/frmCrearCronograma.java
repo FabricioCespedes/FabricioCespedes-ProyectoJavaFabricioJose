@@ -468,6 +468,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscarPrograma;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

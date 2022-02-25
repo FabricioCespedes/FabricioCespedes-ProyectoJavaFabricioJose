@@ -307,7 +307,103 @@ public class CronogramaBLO {
         return resultado;
 
     }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que inserta el día de ausencia.
+     * @param diaA Recibe un EDiaAusente con la informacíon que se quiere insertar.
+     * @return Retorna -1 si no se inserto nada, de lo contrario retorna 1.
+     * @throws Exception Arroja una excepción genérica
+     */
+    public int insertarDiaA(EDiaAusente diaA) throws Exception {
+       int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertarDiaA(diaA);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado; 
+    }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que modifica el día de ausencia. 
+     * @param diaA Es el objeto EDiaAusente nuevo que tiene la información nueva que sustituir
+     * @param diaAAnterior Es el objeto EDiaAusente anterior para identificar donde sustituir
+     @return Retorna -1 si no se pudo modificar, en caso contrario retorna el
+     * numero de filas afectadas
+     * @throws Exception Arroja una excepción génerica
+     */
+    public int actualizarDiaA(EDiaAusente diaA, EDiaAusente diaAAnterior) throws Exception {
+       int resultado; 
+       try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizarDiaA(diaA, diaAAnterior);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que elimina el día de ausencia.
+     @param diaA Es el objeto EDiaAusente que tiene la información para saber donde eliminar
+     * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
+     * numero de filas afectadas
+     * @throws Exception Arroja una excepción génerica  
+     */
+    public int eliminarDiaA(EDiaAusente diaA) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminarDiaA(diaA);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que retorna una lista de las ausencias en la base de datos.
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto List con la información de los dias ausentes  requeridos
+     * @throws Exception Retorna excepción genérica.
+     */
+    public List<EDiaAusente> listarDiasA(String condicion) throws Exception {
+        List<EDiaAusente> lista = null;
 
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarDiasA(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que retorna un EDiaAusente de la base de datos.
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto EDiaAusente con la información de el dia ausente  obtenido
+     * @throws Exception Retorna excepción genérica.
+     */
+    public EDiaAusente obtenerDiaA(String condicion) throws Exception {
+       EDiaAusente dia;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            dia = cronogramaDAO.obtenerDiaA(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return dia; 
+    }
+    
+    /**
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que retorna una lista de los motivos de ausencias en la base de datos.
+     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * @return Objeto List con la información de los motivos de ausentes  requeridos
+     * @throws Exception Retorna excepción genérica.
+     */
     public List<EMotivoAusencia> listarMotivos(String condicion) throws Exception {
         List<EMotivoAusencia> lista = null;
 
@@ -322,10 +418,11 @@ public class CronogramaBLO {
     }
 
     /**
-     *
-     * @param motivo
-     * @return
-     * @throws Exception
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que inserta un motivo de ausencia.
+     * @param motivo Recibe un EMotivoAusencia con la informacíon que se quiere insertar.
+     * @return Retorna -1 si no se inserto nada, de lo contrario retorna 1.
+     * @throws Exception Arroja una excepción genérica
      */
     public int insertarMotivo(EMotivoAusencia motivo) throws Exception {
         int resultado;
@@ -340,10 +437,12 @@ public class CronogramaBLO {
     }
 
     /**
-     *
-     * @param motivo
-     * @return
-     * @throws Exception
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que modifica un motivo de ausencia. 
+     * @param motivo Es el objeto EMotivoAusencia nuevo que tiene la información nueva que sustituir
+     * @return Retorna -1 si no se pudo modificar, en caso contrario retorna el
+     * numero de filas afectadas
+     * @throws Exception Arroja una excepción génerica 
      */
     public int actualizarMotivo(EMotivoAusencia motivo) throws Exception {
         int resultado;
@@ -358,11 +457,12 @@ public class CronogramaBLO {
     }
 
     /**
-     *
-     * @param motivo
-     * @return
-     * @throws SQLException
-     * @throws Exception
+     * Este método se encarga redireccionar a la capa de acceso a datos para
+     * usar otro método que elimina un motivo de ausencia.
+     * @param motivo Es el objeto EMotivoAusencia que tiene la información para saber donde eliminar
+     * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
+     * numero de filas afectadas
+     * @throws Exception Arroja una excepción génerica
      */
     public int eliminarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
         int resultado;
@@ -378,7 +478,6 @@ public class CronogramaBLO {
     /**
      * Este método se encarga redireccionar a la capa de acceso a datos para
      * usar otro método que elimina en la base de datos un cronograma
-     *
      * @param idPrograma Valor en entero que recibe un id de un cronograma
      * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
      * numero de filas afectadas.
@@ -513,12 +612,12 @@ public class CronogramaBLO {
     }
 
     /**
-     *
-     * @param listaModulos
-     * @return String con cadena que nos dice como salío el calculo del
-     * cronogra,
-     * @throws SQLException
-     * @throws Exception
+     * Este método recibe una lista de módulos para asignarlos a un cronograma
+     * @param modulos recibe un objeto List con una lista de módulos
+     * @param cronograma recibe un objeto cronograma para asignar
+     * @return String con cadena que nos dice como salío el calculo del cronogra,
+     * @throws SQLException Retorna una excepción de SQL 
+     * @throws Exception Retorna una excepción genérica
      */
     public String recibirModulos(List<EModuloCronograma> listaModulos, String fechaInicio) throws SQLException, Exception {
         String mensaje = "";
@@ -536,7 +635,8 @@ public class CronogramaBLO {
     }
 
     /**
-     *
+     * Este método redirecciona a la capa acceso a datos para usar un método que
+     * obtiene una ID de asignación de un cronograma
      * @param cronograma
      * @return
      * @throws Exception
@@ -597,6 +697,25 @@ public class CronogramaBLO {
 
         }
         return listaOrdenada;
+    }
+    
+        /**
+     * Este método redirecciona a la capa acceso a datos para usar un método que
+     * obtiene un profesor
+     * @param condicion condición por la que se quiere buscar en la base de datos
+     * @return Un EProfesor con los datos encontrados
+     * @throws Exception Retorna una excepción genérica 
+     */
+    public EProfesor obtenerProfesor(String condicion) throws SQLException, Exception {
+        EProfesor profesor;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            profesor = cronogramaDAO.obtenerProfesor(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return profesor;
+    
     }
 
 }

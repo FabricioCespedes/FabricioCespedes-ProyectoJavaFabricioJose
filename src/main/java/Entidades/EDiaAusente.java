@@ -39,6 +39,12 @@ public class EDiaAusente extends EDiaLibre {
         this.profesor = profesor;
     }
 
+    public EDiaAusente(String fechaFin, EProfesor profesor, int idDia, String fecha, EMotivoAusencia motivo) {
+        super(idDia, fecha, motivo);
+        this.fechaFin = fechaFin;
+        this.profesor = profesor;
+    }
+
     
     
     

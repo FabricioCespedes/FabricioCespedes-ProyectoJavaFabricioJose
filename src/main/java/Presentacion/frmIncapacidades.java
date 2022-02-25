@@ -4,16 +4,24 @@
  */
 package Presentacion;
 
+import Entidades.EDiaAusente;
+import Entidades.EProfesor;
+import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author josea
  */
 public class frmIncapacidades extends javax.swing.JInternalFrame {
-
+    EProfesor profesor;
+    DefaultTableModel model;
+    EDiaAusente dia;
     /**
      * Creates new form frmIncapacidades
      */
@@ -63,11 +71,21 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jtableAusencias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtableAusenciasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtableAusencias);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -77,8 +95,18 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
         });
 
         btnCrear.setText("Guardar");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -265,7 +293,11 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
             @Override
             public void windowClosed(WindowEvent wE) {
                 try {
-
+                    profesor = vistaBuscarProfesores.getProfesor();
+                    if (profesor != null) {
+                        txtNomProfesorV.setText(profesor.getNombre() + " " + profesor.getApellido1() + " " + profesor.getApellido2());
+                        txtIdProfesorV.setText(String.valueOf(profesor.getIdPersona()));
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                 }
@@ -275,6 +307,145 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
         vistaBuscarProfesores.setVisible(true);
     }//GEN-LAST:event_btnBuscarProfesorActionPerformed
 
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        EDiaAusente fecha = new EDiaAusente();
+        CronogramaBLO cronogramaBL = new CronogramaBLO();
+        try {
+            fecha.setFecha(formatearFecha(spinnerFechaI.getValue(), false));
+            fecha.setFechaFin(formatearFecha(spinnerFechaF.getValue(), false));
+            fecha.setProfesor(profesor);
+            fecha.setMotivo(cronogramaBL.obtenerMotivo("justificacion = 'Incapacidad'"));
+            if (cronogramaBL.insertarDiaA(fecha) > -1) {
+                JOptionPane.showMessageDialog(this, "Ausencia insertada");
+                limpiarTextos();
+                llenarTabla("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        if (!txtIdProfesorV.equals("")) {
+            CronogramaBLO cronogramaBL = new CronogramaBLO();
+            try {
+                EDiaAusente fecha = new EDiaAusente();
+                EProfesor profe = new EProfesor();
+                fecha.setFecha(formatearFecha(spinnerFechaI.getValue(),false));
+                fecha.setFechaFin(formatearFecha(spinnerFechaF.getValue(), false));
+                profe = cronogramaBL.obtenerProfesor("idProfesor = "+txtIdProfesorV.getText());
+                fecha.setProfesor(profe);
+                fecha.setMotivo(cronogramaBL.obtenerMotivo("justificacion = 'Incapacidad'"));
+                if (!profe.getNombre().equals("")) {
+                    if (cronogramaBL.actualizarDiaA(fecha, dia) > 0) {
+                        JOptionPane.showMessageDialog(this, "Ausencia modificada");
+                        limpiarTextos();
+                        llenarTabla("");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
+                    }   
+                }else{
+                    JOptionPane.showMessageDialog(this, "No se encontro al profesor");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        try {
+            CronogramaBLO cronogramaBLO = new CronogramaBLO();
+            if (!txtIdProfesorV.equals("")) {
+                if (cronogramaBLO.eliminarDiaA(dia) > 0) {
+                    JOptionPane.showMessageDialog(this, "Incapacidad eliminada");
+                    limpiarTabla();
+                    llenarTabla("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Hubo un problema al elimninar");
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jtableAusenciasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtableAusenciasMouseClicked
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+        int fila = 0;
+        EProfesor profesor = new EProfesor();
+        String condicion = "";
+        if (evt.getClickCount() == 2) {
+            fila = jtableAusencias.rowAtPoint(evt.getPoint());
+            condicion = "idProfesor = " + jtableAusencias.getValueAt(fila, 2);
+            try {
+                dia = cronogramaBLO.obtenerDiaA("fechaInicio = '" + jtableAusencias.getValueAt(fila, 0) + "' and fechaFin = '"+jtableAusencias.getValueAt(fila, 1)+"' and idProfesor= "+jtableAusencias.getValueAt(fila, 2));
+                profesor = cronogramaBLO.obtenerProfesor(condicion);
+                if (profesor != null && dia != null) {
+                    txtIdProfesorV.setText(String.valueOf(profesor.getIdPersona()));
+                    txtNomProfesorV.setText(profesor.getNombre() + " " + profesor.getApellido1() + " " + profesor.getApellido2());
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jtableAusenciasMouseClicked
+
+    private void llenarTabla(String condition) throws Exception {
+        List<EDiaAusente> list;
+        CronogramaBLO cronogramaBL = new CronogramaBLO();
+        Object[] row = new Object[4];
+
+        limpiarTabla();
+
+        try {
+            list = cronogramaBL.listarDiasA(condition);
+
+            for (EDiaAusente d : list) {
+                row[0] = d.getFecha();
+                row[1] = d.getFechaFin();
+                row[2] = d.getProfesor().getIdPersona();
+                row[3] = d.getMotivo().getIdMotivoAusencia();
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    private void limpiarTabla() {
+        limpiarTextos();
+        model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        model.addColumn("Fecha Inicial");
+        model.addColumn("Fecha Final");
+        model.addColumn("idProfesor");
+        model.addColumn("idMotivo");
+        jtableAusencias.setModel(model);
+    }
+
+    private void limpiarTextos() {
+        txtIdProfesorV.setText("");
+        txtNomProfesorV.setText("");
+    }
+
+    private String formatearFecha(Object value, boolean inv) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+        if (inv == true) {
+            formatter = new SimpleDateFormat("MM/dd/yyyy");
+        }
+
+        String fecha = formatter.format(value);
+        return fecha;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
