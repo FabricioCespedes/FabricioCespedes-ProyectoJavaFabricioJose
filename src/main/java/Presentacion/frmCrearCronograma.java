@@ -363,10 +363,19 @@ public class frmCrearCronograma extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             if (!listaModulosProgramas.isEmpty()) {
-                CronogramaBLO cronogramaBLO = new CronogramaBLO();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
-                String msj = cronogramaBLO.recibirModulos(listaModulosProgramas, formatter.format(txtfecha.getValue()));
+                if (programa != null) {
+                    CronogramaBLO cronogramaBLO = new CronogramaBLO();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                    for (EModuloCronograma listaModulosPrograma : listaModulosProgramas) {
+                        listaModulosPrograma.setPrograma(programa);
+                    }
+                    String msj = cronogramaBLO.recibirModulos(listaModulosProgramas, formatter.format(txtfecha.getValue()));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe de seleccionar un programa");
+                }
+
             } else {
                 JOptionPane.showMessageDialog(null, "Debe de ingresar modulos para calcular el cronograma");
             }

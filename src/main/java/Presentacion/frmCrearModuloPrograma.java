@@ -441,7 +441,6 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
     private void btnModuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloActionPerformed
         frmBuscarModulos vistaBuscarModulos = new frmBuscarModulos(null, true);
         vistaBuscarModulos.setLocationRelativeTo(this);
-
         vistaBuscarModulos.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent wE) {
@@ -561,6 +560,8 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         txtIdP.setText(String.valueOf(moduloCronograma.getProfesor().get(0).getIdPersona()));
         txtNombreM.setText(moduloCronograma.getModulo().getNombreModulo());
         txtCodigo.setText(String.valueOf(moduloCronograma.getModulo().getCodigo()));
+        profesor = moduloCronograma.getProfesor().get(0);
+        modulo = moduloCronograma.getModulo();
         if ("Activo".equals(moduloCronograma.getEstado())) {
             txtEstado.setSelectedIndex(0);
         } else {
@@ -575,7 +576,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         }
 
         hora = moduloCronograma.getHoraFin().split(":");
-        txtHoraI1.setValue(Integer.parseInt(hora[0]));
+        txtHoraF1.setValue(Integer.parseInt(hora[0]));
         if (Integer.parseInt(hora[1]) == 00) {
             txtHoraF2.setSelectedIndex(0);
         } else {

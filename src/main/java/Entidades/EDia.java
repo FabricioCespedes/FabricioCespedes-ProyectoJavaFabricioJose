@@ -10,7 +10,7 @@ package Entidades;
  */
 public class EDia {
     private int idDia;
-    private char dia; 
+    private String dia; 
 
     public int getIdDia() {
         return idDia;
@@ -20,18 +20,18 @@ public class EDia {
         this.idDia = idDia;
     }
 
-    public char getDia() {
+    public String getDia() {
         return dia;
     }
 
-    public void setDia(char dia) {
+    public void setDia(String dia) {
         this.dia = dia;
     }
 
     public EDia() {
     }
 
-    public EDia(int idDia, char dia) {
+    public EDia(int idDia, String dia) {
         this.idDia = idDia;
         this.dia = dia;
     }

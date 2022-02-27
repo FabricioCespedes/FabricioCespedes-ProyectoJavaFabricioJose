@@ -1,11 +1,10 @@
-
 package AccesoDatos;
 
 import Entidades.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate; 
+import java.time.LocalDate;
 
 /**
  *
@@ -96,11 +95,10 @@ public class CronogramasDAO {
 
         return list;
     }
-    
-    
 
     /**
      * Método que lista todos días feriados de un año.
+     *
      * @param anio recibe por parámetro un año.
      * @return Retorna la lista de feriados de un año-
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
@@ -112,14 +110,14 @@ public class CronogramasDAO {
         List<EDiaFeriado> lista = new ArrayList<>();
         String query = "SELECT * FROM DiasFeriados WHERE YEAR(fecha) = " + anio;
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EDiaFeriado dia = new EDiaFeriado();
                 EMotivoAusencia motivo = new EMotivoAusencia();
                 dia.setIdDia(rs.getInt(1));
-                dia.setFecha(rs.getString(2));                
-                motivo.setMotivo(rs.getString(3));                               
+                dia.setFecha(rs.getString(2));
+                motivo.setMotivo(rs.getString(3));
                 dia.setMotivo(motivo);
                 lista.add(dia);
             }
@@ -136,8 +134,11 @@ public class CronogramasDAO {
 
     /**
      * Método que retorna una lista de los días de ausencia de un profesor.
-     * @param profesor Recibe el profesor el cuál quiere revisar cuales días falto.
-     * @param fechaInicio Recibe la fecha de inicio de la cual se quiere empezar a revisar.
+     *
+     * @param profesor Recibe el profesor el cuál quiere revisar cuales días
+     * falto.
+     * @param fechaInicio Recibe la fecha de inicio de la cual se quiere empezar
+     * a revisar.
      * @return Retorna una lista de días ausentes
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
@@ -146,16 +147,16 @@ public class CronogramasDAO {
     public List<EDiaAusente> listarDias(EProfesor profesor, String fechaInicio) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaAusente> lista = new ArrayList<>();
-        String query = "SELECT fechaInicio, fechaFin, idMotivo FROM DiasAusentes WHERE fechaInicio >= " +  fechaInicio + " and idProfesor = " + profesor.getIdPersona();
+        String query = "SELECT fechaInicio, fechaFin, idMotivo FROM DiasAusentes WHERE fechaInicio >= " + fechaInicio + " and idProfesor = " + profesor.getIdPersona();
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EDiaAusente dia = new EDiaAusente();
                 EMotivoAusencia motivo = new EMotivoAusencia();
-                dia.setFecha(rs.getString(1));                
+                dia.setFecha(rs.getString(1));
                 dia.setFechaFin(rs.getString(2));
-                motivo.setMotivo(rs.getString(3));                               
+                motivo.setMotivo(rs.getString(3));
                 dia.setMotivo(motivo);
                 lista.add(dia);
             }
@@ -169,20 +170,21 @@ public class CronogramasDAO {
 
         return lista;
     }
-    
+
     /**
      * Método que retorna la lista de profesores de un módulo de un programa.
+     *
      * @param cronograma Recibe un objeto un cronograma.
      * @return Retorna una lista de profesores.
      * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EProfesor> listar(EModuloCronograma cronograma) throws SQLException, Exception {
         ResultSet rs = null;
         List<EProfesor> lista = new ArrayList<>();
-        String query = "SELECT p.idProfesor,p.nombreProfesor, p.apellido1Profesor, p.apellido2Profesor , c.nombre, a.fechaInicio,a.fechaFin FROM AsignacionProfesor a inner join Profesores p on a.idProfesor = p.idProfesor inner join Centros c on c.idCentro = p.idCentro where idPrograma = " + cronograma.getPrograma().getIdPrograma()  + " and idModulo = " + cronograma.getModulo().getIdModulo();
+        String query = "SELECT p.idProfesor,p.nombreProfesor, p.apellido1Profesor, p.apellido2Profesor , c.nombre, a.fechaInicio,a.fechaFin FROM AsignacionProfesor a inner join Profesores p on a.idProfesor = p.idProfesor inner join Centros c on c.idCentro = p.idCentro where idPrograma = " + cronograma.getPrograma().getIdPrograma() + " and idModulo = " + cronograma.getModulo().getIdModulo();
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EProfesor profesor = new EProfesor();
@@ -191,7 +193,7 @@ public class CronogramasDAO {
                 profesor.setNombre(rs.getString(2));
                 profesor.setApellido1(rs.getString(3));
                 if (!"".equals(rs.getString(4))) {
-                profesor.setApellido2(rs.getString(4));
+                    profesor.setApellido2(rs.getString(4));
                 }
                 centro.setNombre(rs.getString(5));
                 profesor.setFechaInicio(rs.getString(6));
@@ -210,22 +212,25 @@ public class CronogramasDAO {
 
         return lista;
     }
+
     /**
-     * Método que retorna la lista de los modulos registrados 
-     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * Método que retorna la lista de los modulos registrados
+     *
+     * @param condicion Condicion por la que se quiere filtrar en la base de
+     * datos
      * @return Objeto List con la información de los módulos requeridos
      * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EModulo> listarModulos(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EModulo> lista = new ArrayList<>();
         String query = "SELECT idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales FROM Modulos";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EModulo modulo = new EModulo();
@@ -249,22 +254,25 @@ public class CronogramasDAO {
 
         return lista;
     }
+
     /**
-     * Método que retorna la lista de los programas registrados 
-     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * Método que retorna la lista de los programas registrados
+     *
+     * @param condicion Condicion por la que se quiere filtrar en la base de
+     * datos
      * @return Objeto List con la información de los módulos requeridos
-    * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * @throws SQLException Retorna excepción sql.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EPrograma> listarProgramas(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EPrograma> lista = new ArrayList<>();
         String query = "SELECT idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro, grupo FROM Programas";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EPrograma programa = new EPrograma();
@@ -292,22 +300,25 @@ public class CronogramasDAO {
 
         return lista;
     }
+
     /**
-     * Método que retorna la lista de los profesores registrados 
-     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * Método que retorna la lista de los profesores registrados
+     *
+     * @param condicion Condicion por la que se quiere filtrar en la base de
+     * datos
      * @return Objeto List con la información de los módulos requeridos
-    * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * @throws SQLException Retorna excepción sql.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EProfesor> listarProfesores(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EProfesor> lista = new ArrayList<>();
         String query = "SELECT idProfesor, nombreProfesor, apellido1Profesor, apellido2Profesor, idCentro FROM Profesores";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EProfesor profesor = new EProfesor();
@@ -331,7 +342,7 @@ public class CronogramasDAO {
 
         return lista;
     }
-    
+
     /**
      * Este método devuelve un cronograma según la condición por la que se
      * quiera fitrar
@@ -423,7 +434,7 @@ public class CronogramasDAO {
             ps.setString(5, cronograma.getFechaFin());
             ps.setString(6, cronograma.getHoraInicio());
             ps.setString(7, cronograma.getHoraFin());
-            ps.setString(8, cronograma.getHorasDia());
+            ps.setDouble(8, Double.parseDouble(cronograma.getHorasDia()));
             ps.setString(9, cronograma.getEstado());
             ps.execute();
             rs = ps.getGeneratedKeys();
@@ -441,26 +452,29 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Este método obtiene la identificación de la asignación de un profesor
-     * @param cronograma Parámetro que recibe objeto cronograma para filtrar los datos según sus IDs 
+     *
+     * @param cronograma Parámetro que recibe objeto cronograma para filtrar los
+     * datos según sus IDs
      * @return Retorna un valor entero con la identificación de una asignación
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
      * @throws Exception Arroja una excepción genérica
      */
-    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws SQLException, Exception{
+    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws SQLException, Exception {
         int resultado = -1;
-        
+
         ResultSet rs = null;
-        String query = "Select idAsignacionProfe from AsignacionProfesor Where idModulo = "+cronograma.getModulo().getIdModulo()+" and idPrograma = "+cronograma.getPrograma().getIdPrograma()+" and idProfesor = "+cronograma.getProfesor().get(0).getIdPersona();
+        String query = "Select idAsignacionProfe from AsignacionProfesor Where idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma() + " and idProfesor = " + cronograma.getProfesor().get(0).getIdPersona();
 
         try {
             Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
-                
+
             if (rs != null && rs.next()) {
-              resultado = rs.getInt(1);
+                resultado = rs.getInt(1);
             }
         } catch (SQLException sqlE) {
             throw sqlE;
@@ -469,11 +483,10 @@ public class CronogramasDAO {
         } finally {
             _cnn = null;
         }
-        
-        
+
         return resultado;
     }
-    
+
     /**
      * Método que asigna profesor a un modulo de un programa
      *
@@ -593,6 +606,7 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Método que elimina un modulo cronograma
      *
@@ -628,6 +642,7 @@ public class CronogramasDAO {
 
     /**
      * Método que elimina la totalidad de un cronograma.
+     *
      * @param idPrograma
      * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
@@ -656,22 +671,25 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
-     * Método que retorna la lista de los motivos registrados 
-     * @param condicion Condicion por la que se quiere filtrar en la base de datos
+     * Método que retorna la lista de los motivos registrados
+     *
+     * @param condicion Condicion por la que se quiere filtrar en la base de
+     * datos
      * @return Objeto List con la información de los módulos requeridos
-    * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * @throws SQLException Retorna excepción sql.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EMotivoAusencia> listarMotivos(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EMotivoAusencia> lista = new ArrayList<>();
         String query = "SELECT idMotivo, justificacion FROM MotivosDeAusencias";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EMotivoAusencia motivo = new EMotivoAusencia();
@@ -690,8 +708,10 @@ public class CronogramasDAO {
 
         return lista;
     }
+
     /**
      * Este método obtiene un motivo de ausencia
+     *
      * @param condicion condicion para filtrar por la base de datos
      * @return Retorna un valor entero con la identificación de una asignación
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
@@ -723,13 +743,16 @@ public class CronogramasDAO {
 
         return motivo;
     }
+
     /**
-     * Método que inserta un  motivo de ausencia en la base de datos
-     * @param motivo Objeto EMotivoAsencia con la información a insertar en la base de datos
+     * Método que inserta un motivo de ausencia en la base de datos
+     *
+     * @param motivo Objeto EMotivoAsencia con la información a insertar en la
+     * base de datos
      * @return Retorna -1 si no se inserto nada, de lo contrario retorna 1.
      * @throws SQLException Si ahí un error en base de datos retorna un error
      * SQL Server.
-     * @throws Exception Retorna un error genérico. 
+     * @throws Exception Retorna un error genérico.
      */
     public int insertarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
         int result = -1;
@@ -756,9 +779,12 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Método se encarga de modificar un motivo de ausencia
-     * @param motivo Objeto EMotivoAsencia con la información a modificar en la base de datos
+     *
+     * @param motivo Objeto EMotivoAsencia con la información a modificar en la
+     * base de datos
      * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
      * numero de filas afectadas
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
@@ -788,13 +814,16 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Método encarga de elminar un motivo de ausencia
-     * @param motivo Objeto EMotivoAsencia con la información a eliminar en la base de datos
+     *
+     * @param motivo Objeto EMotivoAsencia con la información a eliminar en la
+     * base de datos
      * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción génerica 
+     * @throws Exception Arroja una excepción génerica
      */
     public int eliminarMotivo(EMotivoAusencia motivo) throws SQLException, Exception {
         int result = -1;
@@ -818,13 +847,15 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
-     * Método que inserta un día de ausencia  en la base de datos
+     * Método que inserta un día de ausencia en la base de datos
+     *
      * @param diaA objeto EDiaAusente con día que se insertará
      * @return Retorna -1 si no se inserto nada, de lo contrario retorna 1.
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción génerica 
+     * @throws Exception Arroja una excepción génerica
      */
     public int insertarDiaA(EDiaAusente diaA) throws SQLException, Exception {
         int result = -1;
@@ -853,10 +884,14 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Método que se encarga de modificar un dia ausente
-     * @param diaA Es el objeto EDiaAusente nuevo que tiene la información nueva que sustituir
-     * @param diaAAnterior Es el objeto EDiaAusente anterior para identificar donde sustituir
+     *
+     * @param diaA Es el objeto EDiaAusente nuevo que tiene la información nueva
+     * que sustituir
+     * @param diaAAnterior Es el objeto EDiaAusente anterior para identificar
+     * donde sustituir
      * @return Retorna -1 si no se pudo modificar, en caso contrario retorna el
      * numero de filas afectadas
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
@@ -871,11 +906,11 @@ public class CronogramasDAO {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setString(1, diaA.getFecha());
             ps.setString(2, diaA.getFechaFin());
-            ps.setLong(3,diaA.getProfesor().getIdPersona());
+            ps.setLong(3, diaA.getProfesor().getIdPersona());
             ps.setInt(4, diaA.getMotivo().getIdMotivoAusencia());
             ps.setString(5, diaAAnterior.getFecha());
             ps.setString(6, diaAAnterior.getFechaFin());
-            ps.setLong(7,diaAAnterior.getProfesor().getIdPersona());
+            ps.setLong(7, diaAAnterior.getProfesor().getIdPersona());
             result = ps.executeUpdate();
             if (result > 0) {
                 msg = "Día ausente actualizado con exito";
@@ -891,14 +926,17 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Método que se encarga de eliminar un dia ausente
-     * @param diaA Es el objeto EDiaAusente que tiene la información de donde eliminar
+     *
+     * @param diaA Es el objeto EDiaAusente que tiene la información de donde
+     * eliminar
      * @return Retorna -1 si no se pudo eliminar, en caso contrario retorna el
      * numero de filas afectadas
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción génerica 
+     * @throws Exception Arroja una excepción génerica
      */
     public int eliminarDiaA(EDiaAusente diaA) throws SQLException, Exception {
         int result = -1;
@@ -908,7 +946,7 @@ public class CronogramasDAO {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setString(1, diaA.getFecha());
             ps.setString(2, diaA.getFechaFin());
-            ps.setLong(3,diaA.getProfesor().getIdPersona());
+            ps.setLong(3, diaA.getProfesor().getIdPersona());
             ps.setInt(4, diaA.getMotivo().getIdMotivoAusencia());
             result = ps.executeUpdate();
             if (result > 0) {
@@ -925,13 +963,15 @@ public class CronogramasDAO {
 
         return result;
     }
+
     /**
      * Este método obtiene un EDiaAusente de la tabla de datos
+     *
      * @param condicion condición para filtrar por la base de datos
-     * @return Retorna un EDiaAusente necesitado según la condición 
+     * @return Retorna un EDiaAusente necesitado según la condición
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción genérica 
+     * @throws Exception Arroja una excepción genérica
      */
     public EDiaAusente obtenerDiaA(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
@@ -964,22 +1004,25 @@ public class CronogramasDAO {
 
         return dia;
     }
+
     /**
-     * Método que retorna la lista de los dias ausentes registrados 
-     * @param condicion Condicion por la que se quiere filtrar en la base de datos
-     * @return Objeto List con la información de los dias ausentes  requeridos
-    * @throws SQLException Retorna excepción sql.
-     * @throws Exception  Retorna excepción genérica.
+     * Método que retorna la lista de los dias ausentes registrados
+     *
+     * @param condicion Condicion por la que se quiere filtrar en la base de
+     * datos
+     * @return Objeto List con la información de los dias ausentes requeridos
+     * @throws SQLException Retorna excepción sql.
+     * @throws Exception Retorna excepción genérica.
      */
     public List<EDiaAusente> listarDiasA(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaAusente> lista = new ArrayList<>();
         String query = "SELECT fechaInicio, fechaFin, idProfesor, idMotivo FROM DiasAusentes";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EDiaAusente diaA = new EDiaAusente();
@@ -1004,14 +1047,16 @@ public class CronogramasDAO {
 
         return lista;
     }
+
     /**
      * Este método obtiene un profesor de la base de datos
+     *
      * @param condicion condicion para filtrar por la base de datos
      * @return Retorna un valor entero con la información de un profesor
      * @throws SQLException Arroja un excepción de SQL en caso de que la base de
      * datos tenga un fallo
-     * @throws Exception Arroja una excepción genérica 
-     */ 
+     * @throws Exception Arroja una excepción genérica
+     */
     public EProfesor obtenerProfesor(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EProfesor profesor = new EProfesor();
@@ -1046,4 +1091,55 @@ public class CronogramasDAO {
     public String getMessage() {
         return msg;
     }
+
+    public List<EDia> listarDiasPrograma(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        List<EDia> lista = new ArrayList<>();
+        String query = "SELECT d.idDia, d.dia FROM Dias d INNER JOIN ProgramasDias pd ON d.idDia = pd.idDia INNER JOIN Programas p ON p.idPrograma =pd.idPrograma ";
+        if (!condicion.equals("")) {
+            query += " WHERE " + condicion;
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+            while (rs != null && rs.next()) {
+                EDia dia = new EDia();
+                dia.setIdDia(rs.getInt(1));
+                dia.setDia(rs.getString(2));
+                lista.add(dia);
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return lista;
+    }
+
+    public boolean revisarFecha(String fecha) throws SQLException, Exception {
+        ResultSet rs = null;
+        boolean bandera = false;
+        String query;
+        query = "SELECT * from DiasAusentes where fechaFin >= '"+ fecha + "' and fechaInicio <= '"+fecha+"'";
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                bandera = true;
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            _cnn = null;
+        }
+        return bandera;
+    }
+
 }
