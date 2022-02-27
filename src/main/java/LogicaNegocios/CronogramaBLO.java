@@ -772,5 +772,39 @@ public class CronogramaBLO {
             throw e;
         }
         return resultado;
+    } 
+    
+    public EModuloCronograma obtenerCronograma(String condicion) throws Exception {
+        EModuloCronograma cronograma;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            cronograma = cronogramaDAO.obtenerCronograma(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return cronograma;
     }
+    
+    public EPrograma obtenerPrograma(String condicion) throws Exception {
+       EPrograma programa;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            programa = cronogramaDAO.obtenerPrograma(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return programa; 
+    }
+    
+    public EModulo obtenerModulo(String condicion) throws Exception {
+        EModulo modulo;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            modulo = cronogramaDAO.obtenerModulo(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return modulo; 
+    }
+    
 }

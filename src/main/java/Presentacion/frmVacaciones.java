@@ -344,7 +344,7 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
 
-        if (!txtIdProfesorV.equals("")) {
+        if (!txtIdProfesorV.getText().equals("")) {
             CronogramaBLO cronogramaBL = new CronogramaBLO();
             try {
                 EDiaAusente fecha = new EDiaAusente();
@@ -414,7 +414,7 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
     private void llenarTabla(String condition) throws Exception {
         List<EDiaAusente> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
-        Object[] row = new Object[4];
+        Object[] row = new Object[6];
 
         limpiarTabla();
 
@@ -422,11 +422,24 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
             list = cronogramaBL.listarDiasA(condition);
 
             for (EDiaAusente d : list) {
+                EMotivoAusencia motivoAux = cronogramaBL.obtenerMotivo("idMotivo ="+d.getMotivo().getIdMotivoAusencia());
+                EProfesor profesorAux = cronogramaBL.obtenerProfesor("idProfesor ="+d.getProfesor().getIdPersona());
                 row[0] = d.getFecha();
                 row[1] = d.getFechaFin();
                 row[2] = d.getProfesor().getIdPersona();
-                row[3] = d.getMotivo().getIdMotivoAusencia();
-                model.addRow(row);
+                if (!profesorAux.getNombre().equals("")) {
+                    row[3] = profesorAux.getNombre()+" "+profesorAux.getApellido1()+" "+profesorAux.getApellido2();                   
+                }else{
+                    row[3] ="";
+                }
+                row[4] = d.getMotivo().getIdMotivoAusencia();
+                if (!motivoAux.getMotivo().equals("")) {
+                    row[5] = motivoAux.getMotivo();                    
+                }else{
+                   row[5] =""; 
+                }
+
+                model.addRow(row);   
             }
         } catch (Exception e) {
             throw e;
@@ -444,8 +457,11 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
         model.addColumn("Fecha Inicial");
         model.addColumn("Fecha Final");
         model.addColumn("idProfesor");
+        model.addColumn("Profesor");
         model.addColumn("idMotivo");
+        model.addColumn("Motivo");
         jtableAusencias.setModel(model);
+        ocultarColumnas();
     }
 
     private void limpiarTextos() {
@@ -463,6 +479,19 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
 
         String fecha = formatter.format(value);
         return fecha;
+    }
+    
+    public void ocultarColumnas(){
+        jtableAusencias.getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(4).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(4).setMinWidth(0);
     }
 
 

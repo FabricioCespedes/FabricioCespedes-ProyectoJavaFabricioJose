@@ -1181,6 +1181,116 @@ public class CronogramasDAO {
 
         return result;
     }
+    
+    public EModuloCronograma obtenerCronograma(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EModuloCronograma cronograma = new EModuloCronograma();
+        String query = "Select idModulo, idAsignacionProfe, idPrograma, fechaInicio, fechaFin, horasDia, estado, horaInicio, horafin  from ModulosCronogramas";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EPrograma programa = new EPrograma();
+                EModulo modulo = new EModulo();
+                modulo.setIdModulo(rs.getInt(1));
+                //profesor.setNombre(rs.getString(2));
+                programa.setIdPrograma(rs.getInt(3));
+                cronograma.setModulo(modulo);
+                cronograma.setPrograma(programa);
+                cronograma.setFechaInicio(rs.getString(4));
+                cronograma.setFechaFin(rs.getString(5));
+                cronograma.setHorasDia(rs.getString(6));
+                cronograma.setEstado(rs.getString(7));
+                cronograma.setHoraInicio(rs.getString(8));
+                cronograma.setHoraFin(rs.getString(9));
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return cronograma;
+    }
+    
+    public EPrograma obtenerPrograma(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EPrograma programa = new EPrograma();
+        String query = "Select idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro  from Programas";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                ECentro centro = new ECentro();
+                programa.setIdPrograma(rs.getInt(1));
+                programa.setCodigo(rs.getString(2));
+                programa.setNombrePrograma(rs.getString(3));
+                programa.setHorasDia(rs.getString(4));
+                programa.setHorasInicio(rs.getString(5));
+                programa.setHorasFin(rs.getString(6));
+                programa.setEstado(rs.getString(7));
+                programa.setAnio(rs.getInt(8));
+                centro.setIdCentro(rs.getInt(9));
+                programa.setCentro(centro);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return programa;
+    }
+    
+    public EModulo obtenerModulo(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EModulo modulo = new EModulo();
+        String query = "Select idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales from Modulos";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EModulo moduloReq = new EModulo();
+                modulo.setIdModulo(rs.getInt(1));
+                modulo.setCodigo(rs.getString(2));
+                modulo.setNombreModulo(rs.getString(3));
+                if (rs.getInt(4) != 0) {
+                    moduloReq.setIdModulo(0);
+                    modulo.setModuloRequerido(moduloReq);
+                }
+                else{
+                    moduloReq.setIdModulo(rs.getInt(4));
+                    modulo.setModuloRequerido(moduloReq);
+                }
+                modulo.setHorasTotales(rs.getInt(5));
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return modulo;
+    }
+    
 
     public String getMessage() {
         return msg;
