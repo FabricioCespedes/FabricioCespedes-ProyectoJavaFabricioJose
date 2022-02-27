@@ -717,5 +717,60 @@ public class CronogramaBLO {
         return profesor;
     
     }
+    
+    public List<EDiaFeriado> listarDiasF(String condicion) throws Exception {
+        List<EDiaFeriado> lista = null;
 
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarDiasF(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
+    
+    public EDiaFeriado obtenerFeriado(String condicion) throws Exception {
+        EDiaFeriado feriado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            feriado = cronogramaDAO.obtenerFeriado(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return feriado;
+    }
+    
+    public int insertarDiaF(EDiaFeriado feriado) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado; 
+    }
+    
+    public int actualizarDiaF(EDiaFeriado feriado) throws Exception {
+        int resultado; 
+       try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+    
+    public int eliminarDiaF(EDiaFeriado feriado) throws Exception {
+         int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
 }

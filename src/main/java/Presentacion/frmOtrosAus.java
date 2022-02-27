@@ -4,7 +4,6 @@
  */
 package Presentacion;
 
-import Entidades.EDiaAusente;
 import Entidades.EDiaFeriado;
 import Entidades.EMotivoAusencia;
 import LogicaNegocios.CronogramaBLO;
@@ -17,15 +16,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author josea
  */
-public class frmFeriados extends javax.swing.JInternalFrame {
-
+public class frmOtrosAus extends javax.swing.JInternalFrame {
     DefaultTableModel model;
     EDiaFeriado dia;
-
     /**
-     * Creates new form frmFeriados
+     * Creates new form frmOtrosAus
      */
-    public frmFeriados() {
+    public frmOtrosAus() {
         initComponents();
         llenarComboMotivos();
         try {
@@ -58,12 +55,10 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         btnCrear = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
 
-        setTitle("Administrar Días Feriados");
-
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel7.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jLabel7.setText("Día Feriado:");
+        jLabel7.setText("Otros motivos:");
 
         spinnerFechaI.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1645588768167L), null, null, java.util.Calendar.YEAR));
 
@@ -202,71 +197,22 @@ public class frmFeriados extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnRegresarActionPerformed
-
-    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        EDiaFeriado fecha = new EDiaFeriado();
-        CronogramaBLO cronogramaBL = new CronogramaBLO();
-        try {
-            fecha.setFecha(formatearFecha(spinnerFechaI.getValue(), false));
-            EMotivoAusencia motivo = cronogramaBL.obtenerMotivo("justificacion = '" + (String) jCBMotivos.getSelectedItem() + "'");
-            if (!motivo.getMotivo().equals("")) {
-                fecha.setMotivo(motivo);
-                if (cronogramaBL.insertarDiaF(fecha) > -1) {
-                    JOptionPane.showMessageDialog(this, "Día feriado insertada");
-                    llenarTabla("");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }//GEN-LAST:event_btnCrearActionPerformed
-
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        CronogramaBLO cronogramaBL = new CronogramaBLO();
-        try {
-            if (!dia.getFecha().equals("")) {
-                dia.setFecha(formatearFecha(spinnerFechaI.getValue(), false));
-                EMotivoAusencia motivo = cronogramaBL.obtenerMotivo("justificacion = '" + (String) jCBMotivos.getSelectedItem() + "'");
-                dia.setMotivo(motivo);
-                if (!motivo.getMotivo().equals("")) {
-                    if (cronogramaBL.actualizarDiaF(dia) > -1) {
-                        JOptionPane.showMessageDialog(this, "Día feriado modificado");
-                        llenarTabla("");
-                        dia = null;
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
-                    }
-                } else {
-                        JOptionPane.showMessageDialog(this, "No se encontró el motivo");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Seleccione un día que editar");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void jtableAusenciasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtableAusenciasMouseClicked
         CronogramaBLO cronogramaBLO = new CronogramaBLO();
@@ -289,7 +235,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         try {
             if (!dia.getFecha().equals("")) {
                 if (cronogramaBL.eliminarDiaF(dia) > -1) {
-                    JOptionPane.showMessageDialog(this, "Día feriado eliminado");
+                    JOptionPane.showMessageDialog(this, "Ausencia eliminada");
                     llenarTabla("");
                     dia = null;
                 } else {
@@ -303,6 +249,58 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        EDiaFeriado fecha = new EDiaFeriado();
+        CronogramaBLO cronogramaBL = new CronogramaBLO();
+        try {
+            fecha.setFecha(formatearFecha(spinnerFechaI.getValue(), false));
+            EMotivoAusencia motivo = cronogramaBL.obtenerMotivo("justificacion = '" + (String) jCBMotivos.getSelectedItem() + "'");
+            if (!motivo.getMotivo().equals("")) {
+                fecha.setMotivo(motivo);
+                if (cronogramaBL.insertarDiaF(fecha) > -1) {
+                    JOptionPane.showMessageDialog(this, "Ausencia insertada");
+                    llenarTabla("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
+                }
+                
+                
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        CronogramaBLO cronogramaBL = new CronogramaBLO();
+        try {
+            if (!dia.getFecha().equals("")) {
+                dia.setFecha(formatearFecha(spinnerFechaI.getValue(), false));
+                EMotivoAusencia motivo = cronogramaBL.obtenerMotivo("justificacion = '" + (String) jCBMotivos.getSelectedItem() + "'");
+                dia.setMotivo(motivo);
+                if (!motivo.getMotivo().equals("")) {
+                    if (cronogramaBL.actualizarDiaF(dia) > -1) {
+                        JOptionPane.showMessageDialog(this, "Ausencia modificada");
+                        llenarTabla("");
+                        dia = null;
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se encontró el motivo");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un día que editar");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+    
     private void llenarComboMotivos() {
         model = new DefaultTableModel() {
             @Override
@@ -313,7 +311,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         List<EMotivoAusencia> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
         try {
-            list = cronogramaBL.listarMotivos("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Suspencion' AND justificacion NOT LIKE 'Permiso Administrativo'");
+            list = cronogramaBL.listarMotivos("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Abolicion del ejercito' AND justificacion NOT LIKE 'Año nuevo' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Dia de Juan Santa Maria' AND justificacion NOT LIKE 'Dia de la independencia' AND justificacion NOT LIKE 'Dia de la madre' AND justificacion NOT LIKE 'Dia del trabajador' AND justificacion NOT LIKE 'Jueves Santo' AND justificacion NOT LIKE 'Viernes Santo' AND justificacion NOT LIKE 'Navidad' AND justificacion NOT LIKE 'Virgen de los santos'");
             for (EMotivoAusencia motivo : list) {
                 jCBMotivos.addItem(motivo.toString());
             }
@@ -321,7 +319,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Hubo un errror al cargar los motivos");
         }
     }
-
+    
     private void llenarTabla(String condition) throws Exception {
         List<EDiaFeriado> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
@@ -342,7 +340,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
             throw e;
         }
     }
-
+    
     private void limpiarTabla() {
         model = new DefaultTableModel() {
             @Override
@@ -355,9 +353,8 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         model.addColumn("idMotivo");
         jtableAusencias.setModel(model);
     }
-
+    
     private String formatearFecha(Object value, boolean inv) {
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
         if (inv == true) {

@@ -319,9 +319,14 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             public void windowClosed(WindowEvent wE) {
                 try {
                     if (vistaAddModulo.getModuloCronograma().getModulo() != null && vistaAddModulo.getModuloCronograma().getProfesor().get(0) != null) {
-                        listaModulosProgramas.add(vistaAddModulo.getModuloCronograma());
-                        if (!listaModulosProgramas.isEmpty()) {
-                            llenarTabla("");
+                        if (compararModulos(listaModulosProgramas, vistaAddModulo.getModuloCronograma()) == false) {
+                            listaModulosProgramas.add(vistaAddModulo.getModuloCronograma());
+                            if (!listaModulosProgramas.isEmpty()) {
+                                llenarTabla("");
+                            }
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "El módulo ingresado ya es parte del programa");
                         }
                     }
                 } catch (Exception e) {
@@ -461,6 +466,19 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+
+    public boolean compararModulos(ArrayList<EModuloCronograma> listaModulosProgramas, EModuloCronograma modulo) {
+        boolean existe = false;
+
+        for (EModuloCronograma listaModulosPrograma : listaModulosProgramas) {
+            if (modulo.getModulo().getIdModulo() == listaModulosPrograma.getModulo().getIdModulo()) {
+                existe = true;
+                return existe;
+            }
+        }
+
+        return existe;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

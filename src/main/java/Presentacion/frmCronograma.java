@@ -56,6 +56,11 @@ public class frmCronograma extends javax.swing.JInternalFrame {
         btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnBuscar.setText("Buscar cronograma");
         btnBuscar.setIconTextGap(2);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnCrear.setBackground(new java.awt.Color(255, 255, 204));
         btnCrear.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -136,6 +141,24 @@ public class frmCronograma extends javax.swing.JInternalFrame {
         });
         vistaCrearCronograma.setVisible(true);
     }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        frmBuscarCronogramas vistaBuscarCronograma = new frmBuscarCronogramas(null, true);
+        vistaBuscarCronograma.setLocationRelativeTo(this);
+
+        vistaBuscarCronograma.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent wE) {
+                try {
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
+            }
+
+        });
+        vistaBuscarCronograma.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

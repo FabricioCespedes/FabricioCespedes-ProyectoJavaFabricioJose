@@ -27,6 +27,11 @@ public class EMotivoAusencia {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
+
+    @Override
+    public String toString() {
+        return motivo;
+    }
     
     public EMotivoAusencia() {
     }

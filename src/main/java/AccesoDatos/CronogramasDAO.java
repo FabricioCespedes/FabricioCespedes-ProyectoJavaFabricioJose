@@ -69,6 +69,10 @@ public class CronogramasDAO {
                     EModulo moduloReq = new EModulo();
                     moduloReq.setIdModulo(rs.getInt(9));
                     modulo.setModuloRequerido(moduloReq);
+                }else{
+                    EModulo moduloReq = new EModulo();
+                    moduloReq.setIdModulo(0);
+                   modulo.setModuloRequerido(modulo);
                 }
                 modulo.setHorasTotales(rs.getInt(10));
                 modulo.setIdModulo(rs.getInt(11));
@@ -1041,6 +1045,141 @@ public class CronogramasDAO {
         }
 
         return profesor;
+    }
+    
+    public List<EDiaFeriado> listarDiasF(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        List<EDiaFeriado> lista = new ArrayList<>();
+        String query = "SELECT idDiaFeriado, fecha, idMotivo FROM DiasFeriados";
+        if (!condicion.equals("")) {
+            query += " WHERE "+condicion;
+        }
+        try {
+            Statement statement = _cnn.createStatement();            
+            rs = statement.executeQuery(query);
+            while (rs != null && rs.next()) {
+                EDiaFeriado diaF = new EDiaFeriado();
+                diaF.setIdDia(rs.getInt(1));
+                diaF.setFecha(rs.getString(2));
+                EMotivoAusencia motivo = new EMotivoAusencia();
+                motivo.setIdMotivoAusencia(rs.getInt(3));
+                diaF.setMotivo(motivo);
+                lista.add(diaF);
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return lista;
+    }
+    
+    public EDiaFeriado obtenerFeriado(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EDiaFeriado feriado = new EDiaFeriado();
+        String query = "Select idDiaFeriado, fecha, idMotivo from DiasFeriados";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EMotivoAusencia motivo = new EMotivoAusencia();
+                feriado.setIdDia(rs.getInt(1));
+                feriado.setFecha(rs.getString(2));
+                motivo.setIdMotivoAusencia(rs.getInt(3));
+                feriado.setMotivo(motivo);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return feriado;
+    }
+     
+    public int insertarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Insert into DiasFeriados (fecha, idMotivo) Values(?,?)";
+        ResultSet rs = null;
+        try {
+
+            PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, feriado.getFecha());
+            ps.setInt(2, feriado.getMotivo().getIdMotivoAusencia());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                result = rs.getInt(1);
+                msg = "Día feriado con almacenado con éxito";
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+     }
+     
+    public int actualizarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Update DiasFeriados set fecha=?, idMotivo=? Where idDiaFeriado=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setString(1, feriado.getFecha());
+            ps.setInt(2, feriado.getMotivo().getIdMotivoAusencia());
+            ps.setLong(3,feriado.getIdDia());
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día feriado actualizado con exito";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+     
+    public int eliminarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Delete DiasFeriados Where idDiaFeriado=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setInt(1, feriado.getIdDia());
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día feriado eliminado";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
     }
 
     public String getMessage() {
