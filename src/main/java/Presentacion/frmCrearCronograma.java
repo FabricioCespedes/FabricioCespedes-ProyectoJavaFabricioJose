@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -27,18 +29,32 @@ public class frmCrearCronograma extends javax.swing.JDialog {
     ArrayList<EModuloCronograma> listaModulosProgramas = new ArrayList<>();
     DefaultTableModel modelo;
     EPrograma programa;
+    frmCronograma visCrono = new frmCronograma();
+    List<EModuloCronograma> listaMC = visCrono.getListaMC();
 
     /**
      * Creates new form frmCrearCronograma
      */
-    public frmCrearCronograma(java.awt.Frame parent, boolean modal) {
+    public frmCrearCronograma(java.awt.Frame parent, boolean modal, boolean actualizar) {
         super(parent, modal);
         initComponents();
+        try{
+            if (listaMC != null && actualizar == true) {
+                listaModulosProgramas = (ArrayList<EModuloCronograma>) listaMC;
+            llenarTabla("");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
         Date datenow = Calendar.getInstance().getTime();
         SpinnerDateModel smb = new SpinnerDateModel(datenow, null, null, Calendar.HOUR_OF_DAY);
         txtfecha.setModel(smb);
         JSpinner.DateEditor d = new JSpinner.DateEditor(txtfecha, "yyyy-MM-dd");
         txtfecha.setEditor(d);
+    }
+
+    private frmCrearCronograma(JFrame jFrame, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     /**
@@ -324,8 +340,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                             if (!listaModulosProgramas.isEmpty()) {
                                 llenarTabla("");
                             }
-                        }
-                        else{
+                        } else {
                             JOptionPane.showMessageDialog(null, "El módulo ingresado ya es parte del programa");
                         }
                     }
@@ -405,6 +420,8 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         }
     }
 
+ 
+
     private void limpiarTabla() {
         modelo = new DefaultTableModel() {
             @Override
@@ -463,7 +480,6 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                         System.exit(0);
                     }
                 });
-                dialog.setVisible(true);
             }
         });
     }

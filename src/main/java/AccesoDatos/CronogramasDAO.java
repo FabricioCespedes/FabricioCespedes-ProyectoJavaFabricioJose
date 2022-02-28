@@ -644,8 +644,7 @@ public class CronogramasDAO {
         String query = String.format("Delete ModulosCronogramas Where idPrograma=%d", idPrograma);
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
-            ps.execute(query);
-
+            result = ps.executeUpdate();
             if (result > 0) {
                 msg = "Cronograma eliminado con exito";
             }

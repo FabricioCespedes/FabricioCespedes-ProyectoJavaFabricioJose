@@ -4,12 +4,18 @@
  */
 package Presentacion;
 
+import Entidades.EModulo;
 import Entidades.EModuloCronograma;
+import Entidades.EProfesor;
+import Entidades.EPrograma;
+import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,13 +23,28 @@ import javax.swing.JOptionPane;
  */
 public class frmCronograma extends javax.swing.JInternalFrame {
 
-    List<EModuloCronograma> listaMC;
+    DefaultTableModel model;
+    private static List<EModuloCronograma> listaMC;
+
+    public List<EModuloCronograma> getListaMC() {
+        return listaMC;
+    }
 
     /**
      * Creates new form frmCronograma
      */
     public frmCronograma() {
         initComponents();
+        try {
+            if (listaMC != null) {
+                if (!listaMC.isEmpty()) {
+                    llenarTabla("");
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
         ImageIcon icon = new ImageIcon("src/main/java/Imagenes/iconoCronograma.png");
         this.setFrameIcon(icon);
         icon = new ImageIcon("src/main/java/Imagenes/buscar.png");
@@ -47,6 +68,9 @@ public class frmCronograma extends javax.swing.JInternalFrame {
         btnCrear = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtablaCronogramas = new javax.swing.JTable();
 
         setClosable(true);
         setIconifiable(true);
@@ -89,6 +113,16 @@ public class frmCronograma extends javax.swing.JInternalFrame {
             }
         });
 
+        btnEliminar.setBackground(new java.awt.Color(255, 255, 204));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnEliminar.setText("Eliminar cronograma");
+        btnEliminar.setIconTextGap(2);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -102,7 +136,9 @@ public class frmCronograma extends javax.swing.JInternalFrame {
                 .addComponent(btnCrear)
                 .addGap(53, 53, 53)
                 .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscar, btnCrear});
@@ -115,27 +151,52 @@ public class frmCronograma extends javax.swing.JInternalFrame {
                     .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, btnCrear});
 
+        jtablaCronogramas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jtablaCronogramas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtablaCronogramasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jtablaCronogramas);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(420, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
@@ -143,7 +204,7 @@ public class frmCronograma extends javax.swing.JInternalFrame {
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
 
-        frmCrearCronograma vistaCrearCronograma = new frmCrearCronograma(null, true);
+        frmCrearCronograma vistaCrearCronograma = new frmCrearCronograma(null, true, false);
         vistaCrearCronograma.setLocationRelativeTo(this);
 
         vistaCrearCronograma.addWindowListener(new WindowAdapter() {
@@ -169,6 +230,9 @@ public class frmCronograma extends javax.swing.JInternalFrame {
             public void windowClosed(WindowEvent wE) {
                 try {
                     listaMC = vistaBuscarCronograma.getListaMC();
+                    if (listaMC != null && !listaMC.isEmpty()) {
+                        llenarTabla("");
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                 }
@@ -179,12 +243,9 @@ public class frmCronograma extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        if (listaMC == null || listaMC.size() == 0) {
-            JOptionPane.showMessageDialog(this, "Debe selecionar un cronograma primero");
-        } else {
-            frmCrearCronograma vistaCrearCronograma = new frmCrearCronograma(null, true);
+        if (listaMC != null && !listaMC.isEmpty()) {
+            frmCrearCronograma vistaCrearCronograma = new frmCrearCronograma(null, true, true);
             vistaCrearCronograma.setLocationRelativeTo(this);
-
             vistaCrearCronograma.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent wE) {
@@ -197,15 +258,127 @@ public class frmCronograma extends javax.swing.JInternalFrame {
 
             });
             vistaCrearCronograma.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Debe selecionar un cronograma primero");
         }
+
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if (listaMC == null || listaMC.size() == 0) {
+            JOptionPane.showMessageDialog(this, "Debe selecionar un cronograma primero");
+        } else {
+            CronogramaBLO cronogramaBLO = new CronogramaBLO();
+            try {
+                if (cronogramaBLO.eliminar(listaMC.get(0).getPrograma().getIdPrograma()) > 0) {
+                    JOptionPane.showMessageDialog(this, "Cronogramas eliminados");
+                    listaMC = null;
+                }
+            } catch (Exception e) {
+
+            }
+
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void jtablaCronogramasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtablaCronogramasMouseClicked
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+        int fila = 0;
+        EProfesor profesor = new EProfesor();
+        String condicion = "";
+        if (evt.getClickCount() == 2) {
+            fila = jtablaCronogramas.rowAtPoint(evt.getPoint());
+            condicion = "idProfesor = " + jtablaCronogramas.getValueAt(fila, 2);
+            try {
+                frmAsignacionProfesor vistaAsignacion = new frmAsignacionProfesor(null, true, listaMC.get(fila), false);
+                vistaAsignacion.setLocationRelativeTo(this);
+
+                vistaAsignacion.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent wE) {
+                        try {
+                            if (listaMC != null && !listaMC.isEmpty()) {
+                                
+                            }
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                        }
+                    }
+
+                });
+                vistaAsignacion.setVisible(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jtablaCronogramasMouseClicked
+
+    private void llenarTabla(String condition) throws Exception {
+
+        CronogramaBLO cronogramaBL = new CronogramaBLO();
+        Object[] row = new Object[15];
+
+        limpiarTabla();
+
+        try {
+            for (EModuloCronograma mc : listaMC) {
+                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc));
+                row[0] = mc.getFechaInicio();
+                row[1] = mc.getFechaFin();
+                row[2] = mc.getHorasDia();
+                row[3] = mc.getHoraInicio();
+                row[4] = mc.getHoraFin();
+                row[5] = mc.getEstado();
+                row[6] = mc.getModulo().getCodigo();
+                row[7] = mc.getModulo().getNombreModulo();
+                row[8] = mc.getModulo().getHorasTotales();
+                row[9] = mc.getPrograma().getCodigo();
+                row[10] = mc.getPrograma().getNombrePrograma();
+                row[11] = mc.getPrograma().getHorasDia();
+                row[12] = mc.getPrograma().getHorasInicio();
+                row[13] = mc.getPrograma().getHorasFin();
+                row[14] = mc.getPrograma().getEstado();
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private void limpiarTabla() {
+        model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        model.addColumn("Fecha Inicio");
+        model.addColumn("Fecha fin");
+        model.addColumn("Horas Dia");
+        model.addColumn("Hora Inicio");
+        model.addColumn("Hora Fin");
+        model.addColumn("Estado");
+        model.addColumn("Codigo Módulo");
+        model.addColumn("Nombre Módulo");
+        model.addColumn("HorasTotales Módulo");
+        model.addColumn("Codigo Programa");
+        model.addColumn("Nombre Programa");
+        model.addColumn("Horas Dia Programa");
+        model.addColumn("Hora Inicio Programa");
+        model.addColumn("Hora Fin");
+        model.addColumn("Estado");
+        jtablaCronogramas.setModel(model);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCrear;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jtablaCronogramas;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,6 +8,7 @@ import Entidades.*;
 import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -125,6 +126,11 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         btnFiltar.setText("Filtrar");
@@ -231,6 +237,10 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnSelActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -282,8 +292,8 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
 
         try {
             listaMC = cronogramaBL.listar(condition);
-
             for (EModuloCronograma mc : listaMC) {
+                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc));
                 row[0] = mc.getFechaInicio();
                 row[1] = mc.getFechaFin();
                 row[2] = mc.getHorasDia();

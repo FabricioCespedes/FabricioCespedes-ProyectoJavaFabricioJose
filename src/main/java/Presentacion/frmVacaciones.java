@@ -235,6 +235,7 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
         jLabel8.setText("Fecha final");
 
         spinnerFechaI.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1645588768167L), null, null, java.util.Calendar.YEAR));
+        spinnerFechaI.setVerifyInputWhenFocusTarget(false);
 
         spinnerFechaF.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1645588768167L), null, null, java.util.Calendar.YEAR));
 
