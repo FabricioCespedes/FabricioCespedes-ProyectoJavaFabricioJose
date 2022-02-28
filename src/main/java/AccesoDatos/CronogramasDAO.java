@@ -68,6 +68,10 @@ public class CronogramasDAO {
                     EModulo moduloReq = new EModulo();
                     moduloReq.setIdModulo(rs.getInt(9));
                     modulo.setModuloRequerido(moduloReq);
+                }else{
+                    EModulo moduloReq = new EModulo();
+                    moduloReq.setIdModulo(0);
+                   modulo.setModuloRequerido(modulo);
                 }
                 modulo.setHorasTotales(rs.getInt(10));
                 modulo.setIdModulo(rs.getInt(11));
@@ -655,8 +659,7 @@ public class CronogramasDAO {
         String query = String.format("Delete ModulosCronogramas Where idPrograma=%d", idPrograma);
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
-            ps.execute(query);
-
+            result = ps.executeUpdate();
             if (result > 0) {
                 msg = "Cronograma eliminado con exito";
             }
@@ -1087,6 +1090,251 @@ public class CronogramasDAO {
 
         return profesor;
     }
+    
+    public List<EDiaFeriado> listarDiasF(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        List<EDiaFeriado> lista = new ArrayList<>();
+        String query = "SELECT idDiaFeriado, fecha, idMotivo FROM DiasFeriados";
+        if (!condicion.equals("")) {
+            query += " WHERE "+condicion;
+        }
+        try {
+            Statement statement = _cnn.createStatement();            
+            rs = statement.executeQuery(query);
+            while (rs != null && rs.next()) {
+                EDiaFeriado diaF = new EDiaFeriado();
+                diaF.setIdDia(rs.getInt(1));
+                diaF.setFecha(rs.getString(2));
+                EMotivoAusencia motivo = new EMotivoAusencia();
+                motivo.setIdMotivoAusencia(rs.getInt(3));
+                diaF.setMotivo(motivo);
+                lista.add(diaF);
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return lista;
+    }
+    
+    public EDiaFeriado obtenerFeriado(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EDiaFeriado feriado = new EDiaFeriado();
+        String query = "Select idDiaFeriado, fecha, idMotivo from DiasFeriados";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EMotivoAusencia motivo = new EMotivoAusencia();
+                feriado.setIdDia(rs.getInt(1));
+                feriado.setFecha(rs.getString(2));
+                motivo.setIdMotivoAusencia(rs.getInt(3));
+                feriado.setMotivo(motivo);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return feriado;
+    }
+     
+    public int insertarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Insert into DiasFeriados (fecha, idMotivo) Values(?,?)";
+        ResultSet rs = null;
+        try {
+
+            PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, feriado.getFecha());
+            ps.setInt(2, feriado.getMotivo().getIdMotivoAusencia());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                result = rs.getInt(1);
+                msg = "Día feriado con almacenado con éxito";
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+     }
+     
+    public int actualizarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Update DiasFeriados set fecha=?, idMotivo=? Where idDiaFeriado=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setString(1, feriado.getFecha());
+            ps.setInt(2, feriado.getMotivo().getIdMotivoAusencia());
+            ps.setLong(3,feriado.getIdDia());
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día feriado actualizado con exito";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+     
+    public int eliminarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Delete DiasFeriados Where idDiaFeriado=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setInt(1, feriado.getIdDia());
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "Día feriado eliminado";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public EModuloCronograma obtenerCronograma(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EModuloCronograma cronograma = new EModuloCronograma();
+        String query = "Select idModulo, idAsignacionProfe, idPrograma, fechaInicio, fechaFin, horasDia, estado, horaInicio, horafin  from ModulosCronogramas";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EPrograma programa = new EPrograma();
+                EModulo modulo = new EModulo();
+                modulo.setIdModulo(rs.getInt(1));
+                //profesor.setNombre(rs.getString(2));
+                programa.setIdPrograma(rs.getInt(3));
+                cronograma.setModulo(modulo);
+                cronograma.setPrograma(programa);
+                cronograma.setFechaInicio(rs.getString(4));
+                cronograma.setFechaFin(rs.getString(5));
+                cronograma.setHorasDia(rs.getString(6));
+                cronograma.setEstado(rs.getString(7));
+                cronograma.setHoraInicio(rs.getString(8));
+                cronograma.setHoraFin(rs.getString(9));
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return cronograma;
+    }
+    
+    public EPrograma obtenerPrograma(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EPrograma programa = new EPrograma();
+        String query = "Select idPrograma, codigo, nombrePrograma, horasDia, horaInicio, horaFin, estado, anio, idCentro  from Programas";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                ECentro centro = new ECentro();
+                programa.setIdPrograma(rs.getInt(1));
+                programa.setCodigo(rs.getString(2));
+                programa.setNombrePrograma(rs.getString(3));
+                programa.setHorasDia(rs.getString(4));
+                programa.setHorasInicio(rs.getString(5));
+                programa.setHorasFin(rs.getString(6));
+                programa.setEstado(rs.getString(7));
+                programa.setAnio(rs.getInt(8));
+                centro.setIdCentro(rs.getInt(9));
+                programa.setCentro(centro);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return programa;
+    }
+    
+    public EModulo obtenerModulo(String condicion) throws SQLException, Exception {
+        ResultSet rs = null;
+        EModulo modulo = new EModulo();
+        String query = "Select idModulo, codigo, nombreModulo, idModuloRequerido, horasTotales from Modulos";
+        if (!condicion.equals("")) {
+            query = String.format("%s Where %s", query, condicion);
+        }
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                EModulo moduloReq = new EModulo();
+                modulo.setIdModulo(rs.getInt(1));
+                modulo.setCodigo(rs.getString(2));
+                modulo.setNombreModulo(rs.getString(3));
+                if (rs.getInt(4) != 0) {
+                    moduloReq.setIdModulo(0);
+                    modulo.setModuloRequerido(moduloReq);
+                }
+                else{
+                    moduloReq.setIdModulo(rs.getInt(4));
+                    modulo.setModuloRequerido(moduloReq);
+                }
+                modulo.setHorasTotales(rs.getInt(5));
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return modulo;
+    }
+    
 
     public String getMessage() {
         return msg;

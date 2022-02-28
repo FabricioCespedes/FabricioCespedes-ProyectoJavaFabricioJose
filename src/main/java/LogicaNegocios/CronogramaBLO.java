@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package LogicaNegocios;
 
 import AccesoDatos.CronogramasDAO;
@@ -586,7 +581,7 @@ public class CronogramaBLO {
                         break;
                     }
                     if (verificarDiasPrograma(anio, i, x)) {
-                        if (!revisarDia((anio + "-" + i + "-" + x), anio, i, x )) {//Se revisa si la fecha iterada está en los dias de ausencia o la lista de dias feriados
+                        if (!revisarDia((anio + "-" + i + "-" + x), anio, i, x)) {//Se revisa si la fecha iterada está en los dias de ausencia o la lista de dias feriados
                             if (contadorHoras == 0) {
                                 fechaInicio = String.valueOf(anio + "-" + i + "-" + x);
                                 cronograma.setFechaInicio(fechaInicio);
@@ -664,15 +659,15 @@ public class CronogramaBLO {
      * @return Un booleano verdadero si encontro la fecha en algunas de las
      * listas o falso si no lo encontró
      */
-    private boolean revisarDia(String fecha, int anio, int mes , int dia) throws SQLException, Exception {
+    private boolean revisarDia(String fecha, int anio, int mes, int dia) throws SQLException, Exception {
         boolean bandera = false;
         try {
             cronogramaDAO = new CronogramasDAO();
             LocalDate fechaFeriado;
-            LocalDate fechaActual = LocalDate.of(anio, mes ,dia);
+            LocalDate fechaActual = LocalDate.of(anio, mes, dia);
             for (EDiaFeriado fechaFeriadoL : listaDiasFeriados) {
-                fechaFeriado =  LocalDate.parse(fechaFeriadoL.getFecha());
-                
+                fechaFeriado = LocalDate.parse(fechaFeriadoL.getFecha());
+
                 if (fechaFeriado.toString().equals(fechaActual.toString())) {
                     bandera = true;
                 }
@@ -800,7 +795,6 @@ public class CronogramaBLO {
             throw e;
         }
         return profesor;
-
     }
 
     public boolean verificarDiasPrograma(int anio, int mes, int dia) {
@@ -812,5 +806,94 @@ public class CronogramaBLO {
             }
         }
         return false;
+    }
+
+    public List<EDiaFeriado> listarDiasF(String condicion) throws Exception {
+        List<EDiaFeriado> lista = null;
+
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            lista = cronogramaDAO.listarDiasF(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return lista;
+    }
+
+    public EDiaFeriado obtenerFeriado(String condicion) throws Exception {
+        EDiaFeriado feriado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            feriado = cronogramaDAO.obtenerFeriado(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return feriado;
+    }
+
+    public int insertarDiaF(EDiaFeriado feriado) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+
+    public int actualizarDiaF(EDiaFeriado feriado) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+
+    public int eliminarDiaF(EDiaFeriado feriado) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.eliminarDiaF(feriado);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+
+    public EModuloCronograma obtenerCronograma(String condicion) throws Exception {
+        EModuloCronograma cronograma;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            cronograma = cronogramaDAO.obtenerCronograma(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return cronograma;
+    }
+
+    public EPrograma obtenerPrograma(String condicion) throws Exception {
+        EPrograma programa;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            programa = cronogramaDAO.obtenerPrograma(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return programa;
+    }
+
+    public EModulo obtenerModulo(String condicion) throws Exception {
+        EModulo modulo;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            modulo = cronogramaDAO.obtenerModulo(condicion);
+        } catch (Exception e) {
+            throw e;
+        }
+        return modulo;
     }
 }

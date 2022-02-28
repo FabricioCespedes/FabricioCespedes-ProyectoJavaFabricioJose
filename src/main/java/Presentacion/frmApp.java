@@ -54,6 +54,7 @@ public class frmApp extends javax.swing.JFrame {
         menuItemIncapacidades = new javax.swing.JMenuItem();
         menuItemFeriados = new javax.swing.JMenuItem();
         menuItemMotivos = new javax.swing.JMenuItem();
+        menuItemMotivos1 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -152,6 +153,17 @@ public class frmApp extends javax.swing.JFrame {
         });
         menuAusencias.add(menuItemMotivos);
 
+        menuItemMotivos1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        menuItemMotivos1.setMnemonic('t');
+        menuItemMotivos1.setText("Otros");
+        menuItemMotivos1.setToolTipText("Administre en esta opcion las incapacidades de los profesores (almacenar,ver, actualizar y eliminar)");
+        menuItemMotivos1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemMotivos1ActionPerformed(evt);
+            }
+        });
+        menuAusencias.add(menuItemMotivos1);
+
         menuBar.add(menuAusencias);
 
         setJMenuBar(menuBar);
@@ -219,6 +231,15 @@ public class frmApp extends javax.swing.JFrame {
         vistaMotivos.setVisible(true);
     }//GEN-LAST:event_menuItemMotivosActionPerformed
 
+    private void menuItemMotivos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemMotivos1ActionPerformed
+        frmOtrosAus vistaOtros = new frmOtrosAus();
+        deskotPane.add(vistaOtros);
+        Dimension desktopSize = deskotPane.getSize();
+        Dimension FrameSize = vistaOtros.getSize();
+        vistaOtros.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        vistaOtros.setVisible(true);
+    }//GEN-LAST:event_menuItemMotivos1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -270,6 +291,7 @@ public class frmApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemFeriados;
     private javax.swing.JMenuItem menuItemIncapacidades;
     private javax.swing.JMenuItem menuItemMotivos;
+    private javax.swing.JMenuItem menuItemMotivos1;
     private javax.swing.JMenuItem menuItemSalir;
     private javax.swing.JMenuItem menuItemVacaciones;
     // End of variables declaration//GEN-END:variables
