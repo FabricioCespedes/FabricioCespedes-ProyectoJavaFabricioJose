@@ -22,6 +22,7 @@ public class CronogramaBLO {
     List<EDiaAusente> listaDiasAusentes;
     List<EDia> listaDias;
     String fechaInicioNueva;
+    boolean simultaneo = false;
 
     /**
      * Este método se encarga redireccionar a la capa de acceso a datos para
@@ -545,7 +546,12 @@ public class CronogramaBLO {
             listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se listan los días feriados del año.
             profe = cronograma.getProfesor().get(0);//El objeto profesor se le asigna el primer profesor del ArrayList profesores del cronograma.
             cronogramaDAO = new CronogramasDAO();
-            listaDiasAusentes = cronogramaDAO.listarDiasA(" idProfesor = " + cronograma.getProfesor().get(0).getIdPersona());//Se listan los dias que está ausente el profeosr
+            if (cronogramaDAO.listar(cronograma).size() == 1) {
+                listaDiasAusentes = cronogramaDAO.listarDiasA(" idProfesor = " + cronograma.getProfesor().get(0).getIdPersona());//Se listan los dias que está ausente el profeosr
+            }else
+            {
+                
+            }
             cronogramaDAO = new CronogramasDAO();
             listaDias = cronogramaDAO.listarDiasPrograma(" p.idPrograma = " + cronograma.getPrograma().getIdPrograma());
             cronograma.setFechaInicio(fechaInicio);
@@ -629,7 +635,7 @@ public class CronogramaBLO {
      * @param fin Recibe una cadena con la hora final
      * @return La diferencia entre las horas
      */
-    private double obtenerHorasDia(String inicio, String fin) {
+    public double obtenerHorasDia(String inicio, String fin) {
         String[] hora = inicio.split(":");
         int horaInicio = Integer.parseInt(hora[0]);
         int minutoInicio = Integer.parseInt(hora[1]);
@@ -693,11 +699,24 @@ public class CronogramaBLO {
      * @throws SQLException Retorna una excepción de SQL
      * @throws Exception Retorna una excepción genérica
      */
-    public String recibirModulos(List<EModuloCronograma> listaModulos, String fechaInicio) throws SQLException, Exception {
+    public String recibirModulos(List<EModuloCronograma> listaModulos, List<EModuloCronograma> listaModulosParalela, String fechaInicio) throws SQLException, Exception {
         String mensaje = "";
         try {
-            listaModulos = ordenarListaModulos(listaModulos);
             for (EModuloCronograma modulo : listaModulos) {
+                if (!revisarSimultaneo(modulo, listaModulosParalela)) {
+                    double hora1 = obtenerHorasDia(listaModulosParalela.get(listaModulos.indexOf(modulo)).getHoraInicio(), listaModulosParalela.get(listaModulos.indexOf(modulo)).getHoraFin());
+                    double hora2 = obtenerHorasDia(modulo.getHoraInicio(), modulo.getHoraFin());
+                    if (hora1 > hora2) {
+                        calcularCronograma(listaModulosParalela.get(listaModulos.indexOf(modulo)), fechaInicio);
+                        calcularCronograma(modulo, fechaInicio);
+                    } else {
+                        calcularCronograma(modulo, fechaInicio);
+                        calcularCronograma(listaModulosParalela.get(listaModulos.indexOf(modulo)), fechaInicio);
+
+                    }
+                    fechaInicio = fechaInicioNueva;
+                    continue;
+                }
                 if (fechaInicioNueva != null) {
                     fechaInicio = fechaInicioNueva;
                 }
@@ -742,39 +761,6 @@ public class CronogramaBLO {
         }
         return motivo;
 
-    }
-
-    private List<EModuloCronograma> ordenarListaModulos(List<EModuloCronograma> listaModulos) {
-        List<EModuloCronograma> listaOrdenada = new ArrayList<>();
-        int i = 0;
-        int y = 0;
-        EModuloCronograma modulo;
-        while (!listaModulos.isEmpty()) {
-            modulo = listaModulos.get(i);
-            if (modulo.getModulo().getModuloRequerido().getIdModulo() == 0) {
-                listaOrdenada.add(modulo);
-                listaModulos.remove(modulo);
-                i = 0;
-                continue;
-            }
-            if (!listaOrdenada.isEmpty()) {
-                if (modulo.getModulo().getModuloRequerido().getIdModulo() == listaOrdenada.get(y).getModulo().getIdModulo()) {
-                    listaOrdenada.add(modulo);
-                    listaModulos.remove(modulo);
-                    i = 0;
-                    y++;
-                    continue;
-                }
-            }
-
-            if (i == listaModulos.size()) {
-                i = 0;
-            } else {
-                i++;
-            }
-
-        }
-        return listaOrdenada;
     }
 
     /**
@@ -895,5 +881,15 @@ public class CronogramaBLO {
             throw e;
         }
         return modulo;
+    }
+
+    private boolean revisarSimultaneo(EModuloCronograma modulo, List<EModuloCronograma> listaModulosParalela) {
+
+        for (EModuloCronograma eModuloCronograma : listaModulosParalela) {
+            if (modulo.getModulo().getIdModulo() == eModuloCronograma.getModulo().getIdModulo()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

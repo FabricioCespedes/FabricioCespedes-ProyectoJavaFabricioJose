@@ -7,8 +7,14 @@ package Presentacion;
 import Entidades.EModulo;
 import Entidades.EModuloCronograma;
 import Entidades.EProfesor;
+import LogicaNegocios.CronogramaBLO;
+import static Presentacion.frmCrearCronograma.listaModulosParalela;
+import static Presentacion.frmCrearCronograma.listaModulosProgramas;
+import static Presentacion.frmCrearCronograma.simultaneo;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,6 +32,8 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
     EProfesor profesor;
     boolean actualizar = false;
     boolean borrar = false;
+    int index = 0;
+    boolean addModSimultaneo = false;
 
     public boolean isBorrar() {
         return borrar;
@@ -34,7 +42,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
     /**
      * Creates new form frmCrearModuloPrograma
      */
-    public frmCrearModuloPrograma(java.awt.Frame parent, boolean modal, EModuloCronograma moduloCronogramaUpdate) {
+    public frmCrearModuloPrograma(Frame parent, boolean modal, EModuloCronograma moduloCronogramaUpdate, int index, boolean addSimultaneo) {
         super(parent, modal);
         initComponents();
         if (moduloCronogramaUpdate != null) {
@@ -42,6 +50,8 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
             moduloCronograma = moduloCronogramaUpdate;
             actualizarCampos();
         }
+        this.index = index;
+        this.addModSimultaneo = addSimultaneo;
     }
 
     /**
@@ -80,9 +90,10 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         jLabel10 = new javax.swing.JLabel();
         txtEstado = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnAddMod = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        btnSimultaneo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -299,7 +310,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
                 .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(207, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,18 +338,23 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 204));
-        jButton1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jButton1.setText("Añadir modulo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAddMod.setBackground(new java.awt.Color(255, 255, 204));
+        btnAddMod.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnAddMod.setText("Añadir modulo");
+        btnAddMod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAddModActionPerformed(evt);
             }
         });
 
         jButton2.setBackground(new java.awt.Color(255, 255, 204));
         jButton2.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jButton2.setText("Salir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setBackground(new java.awt.Color(255, 255, 204));
         btnEliminar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
@@ -350,32 +366,42 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
             }
         });
 
+        btnSimultaneo.setBackground(new java.awt.Color(255, 255, 204));
+        btnSimultaneo.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnSimultaneo.setText("Añadir modulo simultaneo");
+        btnSimultaneo.setEnabled(false);
+        btnSimultaneo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimultaneoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38))
+                .addContainerGap(344, Short.MAX_VALUE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95)
+                .addComponent(btnSimultaneo)
+                .addGap(66, 66, 66)
+                .addComponent(btnAddMod, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel6Layout.createSequentialGroup()
                     .addGap(38, 38, 38)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(761, Short.MAX_VALUE)))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(935, Short.MAX_VALUE)))
         );
-
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEliminar, jButton1, jButton2});
-
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAddMod, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSimultaneo))
                 .addContainerGap())
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel6Layout.createSequentialGroup()
@@ -384,7 +410,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnEliminar, jButton1, jButton2});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddMod, btnEliminar, btnSimultaneo, jButton2});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -397,7 +423,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
                     .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -419,7 +445,6 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
     private void btnProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProfesorActionPerformed
         frmBuscarProfesores vistaBuscarProfesores = new frmBuscarProfesores(null, true);
         vistaBuscarProfesores.setLocationRelativeTo(this);
-
         vistaBuscarProfesores.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent wE) {
@@ -458,27 +483,100 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         });
         vistaBuscarModulos.setVisible(true);    }//GEN-LAST:event_btnModuloActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAddModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddModActionPerformed
         try {
-            if (modulo != null && profesor != null) {
-                moduloCronograma.setModulo(modulo);
-                profesor.getCentro().setNombre("");
-                profesor.getCentro().setUbicacion("");
-                moduloCronograma.agregarProfesor(profesor);
-                moduloCronograma.setHoraInicio(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()));
-                moduloCronograma.setHoraFin(String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
-                moduloCronograma.setEstado(txtEstado.getSelectedItem().toString());
-                this.dispose();
+
+            if (addModSimultaneo) {
+                CronogramaBLO cronogramaBL = new CronogramaBLO();
+                double horasTotales = cronogramaBL.obtenerHorasDia(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()), String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
+                horasTotales += cronogramaBL.obtenerHorasDia(listaModulosProgramas.get(index).getHoraInicio(), listaModulosProgramas.get(index).getHoraFin());
+                if (horasTotales > 6) {
+                    JOptionPane.showMessageDialog(this, "Los modulos que esta queriendo sincronizar dan mas de 6 horas al dia", "Error", HEIGHT);
+                } else {
+                    String[] hora = listaModulosProgramas.get(index).getHoraFin().split(":");
+                    if (Integer.parseInt(hora[0]) <= (int) txtHoraI1.getValue()) {
+                        if (modulo != null && profesor != null) {
+                            moduloCronograma.setModulo(modulo);
+                            profesor.getCentro().setNombre("");
+                            profesor.getCentro().setUbicacion("");
+                            moduloCronograma.agregarProfesor(profesor);
+                            moduloCronograma.setHoraInicio(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()));
+                            moduloCronograma.setHoraFin(String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
+                            moduloCronograma.setEstado(txtEstado.getSelectedItem().toString());
+                            if (listaModulosProgramas.get(index).getModulo().getIdModulo() == moduloCronograma.getModulo().getIdModulo()) {
+                                JOptionPane.showMessageDialog(this, "Esta queriendo sincronizar el mismo curso", "Error", HEIGHT);
+                            } else {
+                                if (listaModulosProgramas.get(index).getModulo().getIdModulo() == moduloCronograma.getModulo().getModuloRequerido().getIdModulo()) {
+                                    JOptionPane.showMessageDialog(this, "El curso 1 que quiere sincronizar es requisito del curso 2", "Error", HEIGHT);
+                                } else {
+                                    if (listaModulosProgramas.get(index).getModulo().getModuloRequerido().getIdModulo() == moduloCronograma.getModulo().getIdModulo()) {
+                                        JOptionPane.showMessageDialog(this, "El curso 2 que quiere sincronizar es requisito del curso 1", "Error", HEIGHT);
+                                    } else {
+                                        listaModulosParalela.set(index, moduloCronograma);
+                                        
+                                        JOptionPane.showMessageDialog(null, "Ha agregado un modulo simultaneo con exito");
+                                        simultaneo = false;
+                                        this.dispose();
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Las horas de los cursos chocan", "Error", HEIGHT);
+                    }
+
+                }
+            } else {
+                if (modulo != null && profesor != null) {
+                    moduloCronograma.setModulo(modulo);
+                    profesor.getCentro().setNombre("");
+                    profesor.getCentro().setUbicacion("");
+                    moduloCronograma.agregarProfesor(profesor);
+                    moduloCronograma.setHoraInicio(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()));
+                    moduloCronograma.setHoraFin(String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
+                    moduloCronograma.setEstado(txtEstado.getSelectedItem().toString());
+                    this.dispose();
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAddModActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         borrar = true;
         this.dispose();
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnSimultaneoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimultaneoActionPerformed
+        try {
+            if (listaModulosParalela.get(index).getModulo().getIdModulo() == listaModulosProgramas.get(index).getModulo().getIdModulo()) {
+                frmCrearModuloPrograma vistaAddModulo = new frmCrearModuloPrograma(null, true, null, index, true);
+                vistaAddModulo.setLocationRelativeTo(this);
+                vistaAddModulo.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent wE) {
+                        try {
+                            btnSimultaneo.setEnabled(false);
+                            simultaneo = false;
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                        }
+                    }
+                });
+                vistaAddModulo.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error, ese curso ya tiene un curso simultaneo");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnSimultaneoActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -510,7 +608,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                frmCrearModuloPrograma dialog = new frmCrearModuloPrograma(new javax.swing.JFrame(), true, null);
+                frmCrearModuloPrograma dialog = new frmCrearModuloPrograma(new javax.swing.JFrame(), true, null, 0, true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -523,11 +621,12 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddMod;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModulo;
     private javax.swing.JButton btnProfesor;
+    private javax.swing.JButton btnSimultaneo;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -582,7 +681,7 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         } else {
             txtHoraF2.setSelectedIndex(1);
         }
-
+        btnSimultaneo.setEnabled(true);
         btnEliminar.setEnabled(true);
     }
 }
