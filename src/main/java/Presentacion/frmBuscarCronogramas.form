@@ -24,9 +24,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
-              <Component id="btnFiltar" min="-2" pref="326" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="176" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="664" max="-2" attributes="0"/>
               <Component id="btnSel" min="-2" pref="326" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="175" max="-2" attributes="0"/>
               <Component id="btnSalir" min="-2" pref="326" max="-2" attributes="0"/>
@@ -56,7 +54,6 @@
               <Component id="jScrollPane1" min="-2" pref="353" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnFiltar" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
                   <Component id="btnSalir" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
                   <Component id="btnSel" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
               </Group>
@@ -176,17 +173,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btnFiltar">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Filtrar"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFiltarActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="frmBuscarCronogramas_btnFiltar"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JButton" name="btnSalir">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salir"/>

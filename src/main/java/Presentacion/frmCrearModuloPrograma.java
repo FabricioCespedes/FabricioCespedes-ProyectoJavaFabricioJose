@@ -7,6 +7,7 @@ package Presentacion;
 import Entidades.EModulo;
 import Entidades.EModuloCronograma;
 import Entidades.EProfesor;
+import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -465,10 +466,16 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
                 profesor.getCentro().setNombre("");
                 profesor.getCentro().setUbicacion("");
                 moduloCronograma.agregarProfesor(profesor);
-                moduloCronograma.setHoraInicio(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()));
-                moduloCronograma.setHoraFin(String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
-                moduloCronograma.setEstado(txtEstado.getSelectedItem().toString());
-                this.dispose();
+                if (compararHoras(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()), String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem())) == true) {
+                    moduloCronograma.setHoraInicio(String.valueOf(txtHoraI1.getValue()) + ":" + String.valueOf(txtHoraI2.getSelectedItem()));
+                    moduloCronograma.setHoraFin(String.valueOf(txtHoraF1.getValue()) + ":" + String.valueOf(txtHoraF2.getSelectedItem()));
+                    moduloCronograma.setEstado(txtEstado.getSelectedItem().toString());
+                    this.dispose();
+                }
+                else{
+                  JOptionPane.showMessageDialog(this, "Error: Hora inicial mayor que la hora final");  
+                }
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
@@ -520,6 +527,31 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+
+    private boolean compararHoras(String inicio, String fin) {
+        boolean banderaHoras = false;
+        String[] hora = inicio.split(":");
+        int horaInicio = Integer.parseInt(hora[0]);
+        int minutoInicio = Integer.parseInt(hora[1]);
+        hora = fin.split(":");
+        int horaFin = Integer.parseInt(hora[0]);
+        int minutoFin = Integer.parseInt(hora[1]);
+        double resultado = 0;
+
+        if (horaInicio < horaFin) {
+            banderaHoras = true;
+        } else if (horaInicio == horaFin && minutoInicio < minutoFin) {
+            banderaHoras = true;
+        }
+
+        if (banderaHoras == true) {
+            if (horaFin - horaInicio < 6) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

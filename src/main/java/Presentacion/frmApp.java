@@ -16,6 +16,13 @@ import javax.swing.JFrame;
  */
 public class frmApp extends javax.swing.JFrame {
 
+    frmCronograma vistaCronograma = null;
+    frmVacaciones vistaVacaciones = null;
+    frmIncapacidades vistaIncapacidades = null;
+    frmFeriados vistaFeriados = null;
+    frmMotivos vistaMotivos = null;
+    frmOtrosAus vistaOtros = null;
+
     /**
      * Creates new form frmApp
      */
@@ -187,56 +194,68 @@ public class frmApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemSalirActionPerformed
 
     private void menuItemCronoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCronoActionPerformed
-        frmCronograma vistaCronograma = new frmCronograma();
-        deskotPane.add(vistaCronograma);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaCronograma.getSize();
-        vistaCronograma.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaCronograma == null || vistaCronograma.isClosed()) {
+            vistaCronograma = new frmCronograma();
+            deskotPane.add(vistaCronograma);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaCronograma.getSize();
+            vistaCronograma.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaCronograma.setVisible(true);
     }//GEN-LAST:event_menuItemCronoActionPerformed
 
     private void menuItemVacacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemVacacionesActionPerformed
-        frmVacaciones vistaVacaciones = new frmVacaciones();
-        deskotPane.add(vistaVacaciones);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaVacaciones.getSize();
-        vistaVacaciones.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaVacaciones == null || vistaVacaciones.isClosed()) {
+            vistaVacaciones = new frmVacaciones();
+            deskotPane.add(vistaVacaciones);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaVacaciones.getSize();
+            vistaVacaciones.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaVacaciones.setVisible(true);
     }//GEN-LAST:event_menuItemVacacionesActionPerformed
 
     private void menuItemIncapacidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemIncapacidadesActionPerformed
-        frmIncapacidades vistaIncapacidades = new frmIncapacidades();
-        deskotPane.add(vistaIncapacidades);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaIncapacidades.getSize();
-        vistaIncapacidades.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaIncapacidades == null || vistaIncapacidades.isClosed()) {
+            vistaIncapacidades = new frmIncapacidades();
+            deskotPane.add(vistaIncapacidades);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaIncapacidades.getSize();
+            vistaIncapacidades.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaIncapacidades.setVisible(true);
     }//GEN-LAST:event_menuItemIncapacidadesActionPerformed
 
     private void menuItemFeriadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemFeriadosActionPerformed
-        frmFeriados vistaFeriados = new frmFeriados();
-        deskotPane.add(vistaFeriados);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaFeriados.getSize();
-        vistaFeriados.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaFeriados == null || vistaFeriados.isClosed()) {
+            vistaFeriados = new frmFeriados();
+            deskotPane.add(vistaFeriados);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaFeriados.getSize();
+            vistaFeriados.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaFeriados.setVisible(true);
     }//GEN-LAST:event_menuItemFeriadosActionPerformed
 
     private void menuItemMotivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemMotivosActionPerformed
-        frmMotivos vistaMotivos = new frmMotivos();
-        deskotPane.add(vistaMotivos);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaMotivos.getSize();
-        vistaMotivos.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaMotivos == null || vistaMotivos.isClosed()) {
+            vistaMotivos = new frmMotivos();
+            deskotPane.add(vistaMotivos);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaMotivos.getSize();
+            vistaMotivos.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaMotivos.setVisible(true);
     }//GEN-LAST:event_menuItemMotivosActionPerformed
 
     private void menuItemMotivos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemMotivos1ActionPerformed
-        frmOtrosAus vistaOtros = new frmOtrosAus();
-        deskotPane.add(vistaOtros);
-        Dimension desktopSize = deskotPane.getSize();
-        Dimension FrameSize = vistaOtros.getSize();
-        vistaOtros.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        if (vistaOtros == null || vistaOtros.isClosed()) {
+            vistaOtros = new frmOtrosAus();
+            deskotPane.add(vistaOtros);
+            Dimension desktopSize = deskotPane.getSize();
+            Dimension FrameSize = vistaOtros.getSize();
+            vistaOtros.setLocation((desktopSize.width - FrameSize.width) / 2, (desktopSize.height - FrameSize.height) / 2);
+        }
         vistaOtros.setVisible(true);
     }//GEN-LAST:event_menuItemMotivos1ActionPerformed
 
