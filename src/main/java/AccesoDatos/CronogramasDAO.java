@@ -526,15 +526,15 @@ public class CronogramasDAO {
         String query = "Update ModulosCronogramas idAsignacionProfe=?, fechaInicio=?, fechaFin=?, horaInicio=?, horaFin=?, horasDia=?, estado=? Where idModulo=? and idPrograma=?";
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
-            ps.setInt(8, cronograma.getModulo().getIdModulo());
             ps.setInt(1, idAsigPr);
-            ps.setInt(9, cronograma.getPrograma().getIdPrograma());
             ps.setString(2, cronograma.getFechaInicio());
             ps.setString(3, cronograma.getFechaFin());
             ps.setString(4, cronograma.getHoraInicio());
             ps.setString(5, cronograma.getHoraFin());
             ps.setDouble(6, Double.parseDouble(cronograma.getHorasDia()));
             ps.setString(7, cronograma.getEstado());
+            ps.setInt(8, cronograma.getModulo().getIdModulo());
+            ps.setInt(9, cronograma.getPrograma().getIdPrograma());
             ps.executeUpdate();
 
             if (result > 0) {
