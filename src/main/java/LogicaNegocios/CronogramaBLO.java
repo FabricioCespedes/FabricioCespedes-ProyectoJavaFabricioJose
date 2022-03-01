@@ -548,9 +548,8 @@ public class CronogramaBLO {
             cronogramaDAO = new CronogramasDAO();
             if (cronogramaDAO.listar(cronograma).size() == 1) {
                 listaDiasAusentes = cronogramaDAO.listarDiasA(" idProfesor = " + cronograma.getProfesor().get(0).getIdPersona());//Se listan los dias que está ausente el profeosr
-            }else
-            {
-                
+            } else {
+
             }
             cronogramaDAO = new CronogramasDAO();
             listaDias = cronogramaDAO.listarDiasPrograma(" p.idPrograma = " + cronograma.getPrograma().getIdPrograma());
@@ -731,19 +730,18 @@ public class CronogramaBLO {
     }
 
     /**
-     * Este método redirecciona a la capa acceso a datos para usar un método que
-     * obtiene una ID de asignación de un cronograma
      *
      * @param cronograma
+     * @param profe
      * @return
      * @throws Exception
      */
-    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws Exception {
+    public int obtenerIdAsignacion(EModuloCronograma cronograma, EProfesor profe) throws Exception {
         int resultado;
 
         try {
             cronogramaDAO = new CronogramasDAO();
-            resultado = cronogramaDAO.obtenerIdAsignacion(cronograma);
+            resultado = cronogramaDAO.obtenerIdAsignacion(cronograma, profe);
         } catch (Exception e) {
             throw e;
         }
@@ -891,5 +889,38 @@ public class CronogramaBLO {
             }
         }
         return false;
+    }
+
+    public int insertarAsignacion(EModuloCronograma cronograma, EProfesor profe) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.insertarAsignacion(cronograma, profe);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+
+    public int actualizarAsignacion(EModuloCronograma cronograma, EProfesor profe, int idAsi) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.actualizarAsignacion(cronograma, profe, idAsi);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
+    }
+
+    public int eliminarAsignacion(int idAsi) throws Exception {
+        int resultado;
+        try {
+            cronogramaDAO = new CronogramasDAO();
+            resultado = cronogramaDAO.elimnarAsignacion(idAsi);
+        } catch (Exception e) {
+            throw e;
+        }
+        return resultado;
     }
 }

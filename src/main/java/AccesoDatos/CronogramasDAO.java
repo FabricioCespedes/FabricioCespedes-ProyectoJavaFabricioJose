@@ -467,29 +467,7 @@ public class CronogramasDAO {
      * datos tenga un fallo
      * @throws Exception Arroja una excepción genérica
      */
-    public int obtenerIdAsignacion(EModuloCronograma cronograma) throws SQLException, Exception {
-        int resultado = -1;
 
-        ResultSet rs = null;
-        String query = "Select idAsignacionProfe from AsignacionProfesor Where idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma() + " and idProfesor = " + cronograma.getProfesor().get(0).getIdPersona();
-
-        try {
-            Statement statement = _cnn.createStatement();
-            rs = statement.executeQuery(query);
-
-            if (rs != null && rs.next()) {
-                resultado = rs.getInt(1);
-            }
-        } catch (SQLException sqlE) {
-            throw sqlE;
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            _cnn = null;
-        }
-
-        return resultado;
-    }
 
     /**
      * Método que asigna profesor a un modulo de un programa
@@ -979,7 +957,7 @@ public class CronogramasDAO {
     public EDiaAusente obtenerDiaA(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EDiaAusente dia = new EDiaAusente();
-        String query = "Select fechaInicio, fechaFin, idProfesor, idMotivo  from DiasAusentes";
+        String query = "Select fechaInicio, fechaFin, idProfesor, idMotivo  from DiasAusentes inner join Motivos";
         if (!condicion.equals("")) {
             query = String.format("%s Where %s", query, condicion);
         }
@@ -1020,7 +998,7 @@ public class CronogramasDAO {
     public List<EDiaAusente> listarDiasA(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaAusente> lista = new ArrayList<>();
-        String query = "SELECT fechaInicio, fechaFin, idProfesor, idMotivo FROM DiasAusentes";
+        String query = "Select fechaInicio, fechaFin, idProfesor, DiasAusentes.idMotivo  from DiasAusentes inner join MotivosDeAusencias on DiasAusentes.idMotivo = MotivosDeAusencias.idMotivo";
         if (!condicion.equals("")) {
             query += " WHERE " + condicion;
         }
@@ -1388,6 +1366,111 @@ public class CronogramasDAO {
             _cnn = null;
         }
         return bandera;
+    }
+    
+        public int insertarAsignacion(EModuloCronograma cronograma, EProfesor profe) throws SQLException, Exception {
+            int result = -1;
+            String query = "Insert into AsignacionProfesor (idPrograma, idModulo, idProfesor, fechaInicio, fechaFin) Values(?,?,?,?,?)";
+            ResultSet rs = null;
+            try {
+
+                PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, cronograma.getPrograma().getIdPrograma());
+                ps.setInt(2, cronograma.getModulo().getIdModulo());
+                ps.setLong(3, profe.getIdPersona());
+                ps.setString(4, profe.getFechaInicio());
+                ps.setString(5, profe.getFechaFin());
+                ps.execute();
+                rs = ps.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    result = rs.getInt(1);
+                    msg = "Asignación almacenada con éxito";
+                }
+            } catch (SQLException sqlE) {
+                throw sqlE;
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                _cnn = null;
+            }
+
+            return result;
+    }
+        
+    public int actualizarAsignacion(EModuloCronograma cronograma, EProfesor profe, int idAsi) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Update AsignacionProfesor set idPrograma=?, idModulo=?, idProfesor=?, fechaInicio=?, fechaFin=? Where idAsignacionProfe=?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setInt(1, cronograma.getPrograma().getIdPrograma());
+            ps.setInt(2, cronograma.getModulo().getIdModulo());
+            ps.setLong(3, profe.getIdPersona());
+            ps.setString(4, profe.getFechaInicio());
+            ps.setString(5, profe.getFechaFin());
+            ps.setInt(6, idAsi);
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "asignación actualizada con exito";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+    public int elimnarAsignacion(int idAsi) throws SQLException, Exception {
+        int result = -1;
+
+        String query = "Delete AsignacionProfesor Where idAsignacionProfe = ?";
+        try {
+            PreparedStatement ps = _cnn.prepareStatement(query);
+            ps.setInt(1, idAsi);
+
+            result = ps.executeUpdate();
+            if (result > 0) {
+                msg = "Asignación eliminada";
+            }
+
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return result;
+    }
+    
+        public int obtenerIdAsignacion(EModuloCronograma cronograma, EProfesor profesor) throws SQLException, Exception {
+        int resultado = -1;
+
+        ResultSet rs = null;
+        String query = "Select idAsignacionProfe from AsignacionProfesor Where idModulo = " + cronograma.getModulo().getIdModulo() + " and idPrograma = " + cronograma.getPrograma().getIdPrograma() + " and idProfesor = " + profesor.getIdPersona();
+
+        try {
+            Statement statement = _cnn.createStatement();
+            rs = statement.executeQuery(query);
+
+            if (rs != null && rs.next()) {
+                resultado = rs.getInt(1);
+            }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
+
+        return resultado;
     }
 
 }

@@ -126,11 +126,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(jTable1);
 
         btnFiltar.setText("Filtrar");
@@ -235,11 +230,10 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         if (jTable1.getRowCount() !=0) {
            this.dispose();
         }
+        else{
+            JOptionPane.showMessageDialog(this, "Seleccione un programa primero");
+        }
     }//GEN-LAST:event_btnSelActionPerformed
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        
-    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments

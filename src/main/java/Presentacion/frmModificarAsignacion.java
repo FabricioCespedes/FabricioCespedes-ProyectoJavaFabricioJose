@@ -9,6 +9,7 @@ import Entidades.EProfesor;
 import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -17,17 +18,23 @@ import javax.swing.JOptionPane;
  * @author josea
  */
 public class frmModificarAsignacion extends javax.swing.JDialog {
+
     EModuloCronograma cronograma;
     EProfesor profe;
+    EProfesor profeAux;
+    boolean act;
+
     /**
      * Creates new form frmModificarAsignacion
      */
-    public frmModificarAsignacion(java.awt.Frame parent, boolean modal, EModuloCronograma crono, EProfesor prof) {
+    public frmModificarAsignacion(java.awt.Frame parent, boolean modal, EModuloCronograma crono, EProfesor prof, boolean actualizar) {
         super(parent, modal);
         cronograma = crono;
         profe = prof;
+        profeAux = prof;
+        act = actualizar;
         initComponents();
-        llenarProfesor();
+        compararAct(act);
     }
 
     private frmModificarAsignacion(JFrame jFrame, boolean b) {
@@ -55,7 +62,9 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         spinnerFechaF = new javax.swing.JSpinner();
         spinnerFechaI = new javax.swing.JSpinner();
-        btnRegresar1 = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnInsertar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -152,10 +161,25 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
                 .addGap(35, 35, 35))
         );
 
-        btnRegresar1.setText("Actualizar");
-        btnRegresar1.addActionListener(new java.awt.event.ActionListener() {
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresar1ActionPerformed(evt);
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnInsertar.setText("Agregar");
+        btnInsertar.setEnabled(false);
+        btnInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertarActionPerformed(evt);
             }
         });
 
@@ -164,17 +188,20 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(62, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(144, 144, 144))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,7 +213,9 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegresar1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -197,29 +226,108 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRegresar1ActionPerformed
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+        int idAsig = -1;
+        try {
+            EProfesor profeAct = cronogramaBLO.obtenerProfesor("idProfesor = " + txtIdP.getText());
+            profeAct.setFechaInicio(formatearFecha(spinnerFechaI.getValue(), false));
+            profeAct.setFechaFin(formatearFecha(spinnerFechaF.getValue(), false));
+            if (!profeAct.getNombre().equals("")) {
+                idAsig = cronogramaBLO.obtenerIdAsignacion(cronograma, profeAux);
+                if (idAsig > -1) {
+                    if (cronogramaBLO.actualizarAsignacion(cronograma, profeAct, idAsig) > 0) {
+                        JOptionPane.showMessageDialog(this, "Asignación actualizada");
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Hubo un error al actualizar");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Identificación de asignación no encontrada");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Profesor no encontrado");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        frmAsignacionProfesor vistaAsignacion = new frmAsignacionProfesor(null, true, cronograma, true);
-                vistaAsignacion.setLocationRelativeTo(this);
 
-                vistaAsignacion.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent wE) {
-                        try {
-                            profe = vistaAsignacion.getProfe();
-                            txtIdP.setText(String.valueOf(profe.getIdPersona()));
-                            txtNomP.setText(profe.getNombre()+" "+profe.getApellido1()+" "+profe.getApellido2());
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-                        }
+        frmBuscarProfesores vistaBuscarProfesores = new frmBuscarProfesores(null, true);
+        vistaBuscarProfesores.setLocationRelativeTo(this);
+
+        vistaBuscarProfesores.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent wE) {
+                try {
+                    profe = vistaBuscarProfesores.getProfesor();
+                    if (profe != null) {
+                        txtNomP.setText(profe.getNombre() + " " + profe.getApellido1() + " " + profe.getApellido2());
+                        txtIdP.setText(String.valueOf(profe.getIdPersona()));
                     }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
+            }
 
-                });
-                vistaAsignacion.setVisible(true);
+        });
+        vistaBuscarProfesores.setVisible(true);
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+        int idAsig = -1;
+        try {
+            EProfesor profeEli = cronogramaBLO.obtenerProfesor("idProfesor = " + txtIdP.getText());
+            if (!profeEli.getNombre().equals("")) {
+                idAsig = cronogramaBLO.obtenerIdAsignacion(cronograma, profeEli);
+                if (idAsig > -1) {
+                    if (cronogramaBLO.eliminarAsignacion(idAsig) > 0) {
+                        JOptionPane.showMessageDialog(this, "Asignación elimnada");
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Hubo un error al eliminar");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Identificación de asignación no encontrada");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Profesor no encontrado");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
+        CronogramaBLO cronogramaBLO = new CronogramaBLO();
+
+        try {
+            EProfesor profeIns = cronogramaBLO.obtenerProfesor("idProfesor = " + txtIdP.getText());
+            profeIns.setFechaInicio(formatearFecha(spinnerFechaI.getValue(), false));
+            profeIns.setFechaFin(formatearFecha(spinnerFechaF.getValue(), false));
+            if (!profeIns.getNombre().equals("")) {
+                if (cronogramaBLO.insertarAsignacion(cronograma, profeIns) > 0) {
+                    JOptionPane.showMessageDialog(this, "Asignación insertada");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Hubo un error al eliminar");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Profesor no encontrado");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnInsertarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,18 +370,29 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
             }
         });
     }
-    
-    public void llenarProfesor(){
+
+    public void llenarProfesor() {
         txtIdP.setText(String.valueOf(profe.getIdPersona()));
-        txtNomP.setText(profe.getNombre()+" "+profe.getApellido1()+" "+profe.getApellido2());
+        txtNomP.setText(profe.getNombre() + " " + profe.getApellido1() + " " + profe.getApellido2());
     }
-    
-    
-    
+
+    private String formatearFecha(Object value, boolean inv) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+        if (inv == true) {
+            formatter = new SimpleDateFormat("MM/dd/yyyy");
+        }
+
+        String fecha = formatter.format(value);
+        return fecha;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnInsertar;
     private javax.swing.JButton btnRegresar;
-    private javax.swing.JButton btnRegresar1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -286,4 +405,14 @@ public class frmModificarAsignacion extends javax.swing.JDialog {
     private javax.swing.JTextField txtIdP;
     private javax.swing.JTextField txtNomP;
     // End of variables declaration//GEN-END:variables
+
+    private void compararAct(boolean act) {
+        if (act) {
+            llenarProfesor();
+        } else {
+            btnActualizar.setEnabled(false);
+            btnEliminar.setEnabled(false);
+            btnInsertar.setEnabled(true);
+        }
+    }
 }

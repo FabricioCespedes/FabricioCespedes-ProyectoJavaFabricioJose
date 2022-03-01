@@ -59,10 +59,14 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        btnCrear = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Lista de profesores del Programa");
@@ -94,12 +98,21 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
 
         jLabel1.setText("Selecciona un profesor:");
 
+        btnCrear.setText("Registrar");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66))
             .addGroup(layout.createSequentialGroup()
@@ -120,7 +133,9 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24))
         );
 
@@ -141,14 +156,14 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
             if (act == false) {
                 try {
 
-                    frmModificarAsignacion vistaModAsignacion = new frmModificarAsignacion(null, true, cronograma, profesores.get(fila));
+                    frmModificarAsignacion vistaModAsignacion = new frmModificarAsignacion(null, true, cronograma, profesores.get(fila), true);
                     vistaModAsignacion.setLocationRelativeTo(this);
 
                     vistaModAsignacion.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent wE) {
                             try {
-
+                                llenarTabla("");
                             } catch (Exception e) {
                                 JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                             }
@@ -165,6 +180,25 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
 
         }
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        int fila=0;
+        frmModificarAsignacion vistaModAsignacion = new frmModificarAsignacion(null, true, cronograma, profesores.get(fila), false);
+                    vistaModAsignacion.setLocationRelativeTo(this);
+
+                    vistaModAsignacion.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent wE) {
+                            try {
+                                llenarTabla("");
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                            }
+                        }
+
+                    });
+                    vistaModAsignacion.setVisible(true);
+    }//GEN-LAST:event_btnCrearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -242,7 +276,9 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
