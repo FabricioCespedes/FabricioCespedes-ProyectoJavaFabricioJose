@@ -1072,7 +1072,7 @@ public class CronogramasDAO {
     public List<EDiaFeriado> listarDiasF(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaFeriado> lista = new ArrayList<>();
-        String query = "SELECT idDiaFeriado, fecha, idMotivo FROM DiasFeriados";
+        String query = "SELECT idDiaFeriado, fecha, DiasFeriados.idMotivo FROM DiasFeriados inner join MotivosDeAusencias on DiasFeriados.idMotivo = MotivosDeAusencias.idMotivo";
         if (!condicion.equals("")) {
             query += " WHERE "+condicion;
         }
