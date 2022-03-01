@@ -103,12 +103,12 @@ public class CronogramaBLO {
      * @return Retorna una lista de profesores.
      * @throws Exception Arroja una excepción genérica
      */
-    public List<EProfesor> listar(EModuloCronograma cronograma) throws Exception {
+    public List<EProfesor> listar(EModuloCronograma cronograma, String condicion) throws Exception {
         List<EProfesor> lista = null;
 
         try {
             cronogramaDAO = new CronogramasDAO();
-            lista = cronogramaDAO.listar(cronograma);
+            lista = cronogramaDAO.listar(cronograma, condicion);
         } catch (Exception e) {
             throw e;
         }
@@ -535,21 +535,23 @@ public class CronogramaBLO {
         Calendar calendario = Calendar.getInstance(); //Calendario que se va a rrecorrer
         EProfesor profe = new EProfesor(); //Objeto profesor que se usa en la evaluación 
         boolean existe = false;
-
+        boolean variosProfes = false;
         try {
             cronogramaDAO = new CronogramasDAO(); //Instancia de CronogramasDAO para acceder a la capa de datos.
             String[] arreglosFecha = fechaInicio.split("-");
             int mesInicio = Integer.parseInt(arreglosFecha[1]);//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su mes de inicio.
             int dia = Integer.parseInt(arreglosFecha[2]);//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su día de inicio.
             int anio = Integer.parseInt(arreglosFecha[0]);//Se va a descomponer la cadena de la fecha inicial del modulo para extraer su año de inicio.
-
+            cronogramaDAO = new CronogramasDAO();
             listaDiasFeriados = cronogramaDAO.listarDias(anio);//Se listan los días feriados del año.
             profe = cronograma.getProfesor().get(0);//El objeto profesor se le asigna el primer profesor del ArrayList profesores del cronograma.
             cronogramaDAO = new CronogramasDAO();
-            if (cronogramaDAO.listar(cronograma).size() == 1) {
+            if (cronogramaDAO.listar(cronograma, "").size() <= 1) {
+
+                cronogramaDAO = new CronogramasDAO();
                 listaDiasAusentes = cronogramaDAO.listarDiasA(" idProfesor = " + cronograma.getProfesor().get(0).getIdPersona());//Se listan los dias que está ausente el profeosr
             } else {
-
+                variosProfes = true;
             }
             cronogramaDAO = new CronogramasDAO();
             listaDias = cronogramaDAO.listarDiasPrograma(" p.idPrograma = " + cronograma.getPrograma().getIdPrograma());
@@ -586,6 +588,13 @@ public class CronogramaBLO {
                         break;
                     }
                     if (verificarDiasPrograma(anio, i, x)) {
+                        if (variosProfes) {
+                            cronogramaDAO = new CronogramasDAO();
+                            EProfesor profesor = cronogramaDAO.listar(cronograma, "a.fechaFin >= '" + String.valueOf(anio + "-" + i + "-" + x) + "' and a.fechaInicio <= '" + String.valueOf(anio + "-" + i + "-" + x) + "'").get(0);
+                            cronogramaDAO = new CronogramasDAO();
+                            listaDiasAusentes = cronogramaDAO.listarDiasA(" idProfesor = " + cronograma.getProfesor().get(0).getIdPersona());//Se listan los dias que está ausente el profeosr
+                        }
+
                         if (!revisarDia((anio + "-" + i + "-" + x), anio, i, x)) {//Se revisa si la fecha iterada está en los dias de ausencia o la lista de dias feriados
                             if (contadorHoras == 0) {
                                 fechaInicio = String.valueOf(anio + "-" + i + "-" + x);
@@ -608,7 +617,8 @@ public class CronogramaBLO {
 
             cronogramaDAO = new CronogramasDAO();
             if (cronogramaDAO.obtener("m.idModulo = " + cronograma.getModulo().getIdModulo() + " and p.idPrograma = " + cronograma.getPrograma().getIdPrograma()).getModulo() != null) {//Si se obtiene un cronograma de módulo que tenga el mismo ID de módulo y el mismo ID de programa
-                int ac1 = actualizar(cronograma);//Se actualiza la asignación cronograma
+                cronogramaDAO = new CronogramasDAO();
+                int ac1 = actualizar(cronograma,cronogramaDAO.obtenerIdAsignacion(cronograma, profe));//Se actualiza la asignación cronograma
                 if (ac1 > -1) {
                     int actCro = actualizar(cronograma, ac1);//Se actualiza el cronograma del módulo
                     msg = "Cronograma calculado y actualizado";

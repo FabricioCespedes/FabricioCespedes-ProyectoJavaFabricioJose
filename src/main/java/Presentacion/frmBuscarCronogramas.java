@@ -287,7 +287,7 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         try {
             listaMC = cronogramaBL.listar(condition);
             for (EModuloCronograma mc : listaMC) {
-                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc));
+                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc,""));
                 row[0] = mc.getFechaInicio();
                 row[1] = mc.getFechaFin();
                 row[2] = mc.getHorasDia();

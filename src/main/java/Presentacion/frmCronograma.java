@@ -4,10 +4,9 @@
  */
 package Presentacion;
 
-import Entidades.EModulo;
+
 import Entidades.EModuloCronograma;
 import Entidades.EProfesor;
-import Entidades.EPrograma;
 import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -275,7 +274,7 @@ public class frmCronograma extends javax.swing.JInternalFrame {
                     listaMC = null;
                 }
             } catch (Exception e) {
-
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             }
 
         }
@@ -322,7 +321,7 @@ public class frmCronograma extends javax.swing.JInternalFrame {
 
         try {
             for (EModuloCronograma mc : listaMC) {
-                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc));
+                mc.setProfesor((ArrayList<EProfesor>) cronogramaBL.listar(mc,""));
                 row[0] = mc.getFechaInicio();
                 row[1] = mc.getFechaFin();
                 row[2] = mc.getHorasDia();

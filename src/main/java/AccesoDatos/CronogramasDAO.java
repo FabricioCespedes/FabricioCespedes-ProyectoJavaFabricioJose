@@ -4,7 +4,6 @@ import Entidades.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 /**
  *
@@ -59,8 +58,8 @@ public class CronogramasDAO {
                 cronograma.setFechaInicio(rs.getString(1));
                 cronograma.setFechaFin(rs.getString(2));
                 cronograma.setHorasDia(rs.getString(3));
-                cronograma.setHoraInicio(rs.getString(4));
-                cronograma.setHoraFin(rs.getString(5));
+                cronograma.setHoraInicio(rs.getString(4).substring(0, 5));
+                cronograma.setHoraFin(rs.getString(5).substring(0, 5));
                 cronograma.setEstado(rs.getString(6));
                 modulo.setCodigo(rs.getString(7));
                 modulo.setNombreModulo(rs.getString(8));
@@ -68,10 +67,10 @@ public class CronogramasDAO {
                     EModulo moduloReq = new EModulo();
                     moduloReq.setIdModulo(rs.getInt(9));
                     modulo.setModuloRequerido(moduloReq);
-                }else{
+                } else {
                     EModulo moduloReq = new EModulo();
                     moduloReq.setIdModulo(0);
-                   modulo.setModuloRequerido(modulo);
+                    modulo.setModuloRequerido(modulo);
                 }
                 modulo.setHorasTotales(rs.getInt(10));
                 modulo.setIdModulo(rs.getInt(11));
@@ -183,10 +182,13 @@ public class CronogramasDAO {
      * @throws SQLException Retorna excepción sql.
      * @throws Exception Retorna excepción genérica.
      */
-    public List<EProfesor> listar(EModuloCronograma cronograma) throws SQLException, Exception {
+    public List<EProfesor> listar(EModuloCronograma cronograma, String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EProfesor> lista = new ArrayList<>();
         String query = "SELECT p.idProfesor,p.nombreProfesor, p.apellido1Profesor, p.apellido2Profesor , c.nombre, a.fechaInicio,a.fechaFin FROM AsignacionProfesor a inner join Profesores p on a.idProfesor = p.idProfesor inner join Centros c on c.idCentro = p.idCentro where idPrograma = " + cronograma.getPrograma().getIdPrograma() + " and idModulo = " + cronograma.getModulo().getIdModulo();
+        if (!condicion.equals("")) {
+            query += " and " + condicion;
+        }
         try {
             Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
@@ -467,8 +469,6 @@ public class CronogramasDAO {
      * datos tenga un fallo
      * @throws Exception Arroja una excepción genérica
      */
-
-
     /**
      * Método que asigna profesor a un modulo de un programa
      *
@@ -488,8 +488,8 @@ public class CronogramasDAO {
             PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, cronograma.getModulo().getIdModulo());
             ps.setInt(2, cronograma.getPrograma().getIdPrograma());
-            ps.setString(3, cronograma.getHoraInicio());
-            ps.setString(4, cronograma.getHoraFin());
+            ps.setString(3, cronograma.getFechaInicio());
+            ps.setString(4, cronograma.getFechaFin());
             ps.setLong(5, (long) cronograma.getProfesor().get(0).getIdPersona());
             ps.execute();
             rs = ps.getGeneratedKeys();
@@ -533,7 +533,7 @@ public class CronogramasDAO {
             ps.setString(3, cronograma.getFechaFin());
             ps.setString(4, cronograma.getHoraInicio());
             ps.setString(5, cronograma.getHoraFin());
-            ps.setString(6, cronograma.getHorasDia());
+            ps.setDouble(6, Double.parseDouble(cronograma.getHorasDia()));
             ps.setString(7, cronograma.getEstado());
             ps.executeUpdate();
 
@@ -570,8 +570,8 @@ public class CronogramasDAO {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setInt(3, cronograma.getModulo().getIdModulo());
             ps.setInt(4, cronograma.getPrograma().getIdPrograma());
-            ps.setString(1, cronograma.getHoraInicio());
-            ps.setString(2, cronograma.getHoraFin());
+            ps.setString(1, cronograma.getFechaInicio());
+            ps.setString(2, cronograma.getFechaFin());
             ps.setLong(5, (long) cronograma.getProfesor().get(0).getIdPersona());
             ps.executeUpdate();
             if (result > 0) {
@@ -1068,16 +1068,16 @@ public class CronogramasDAO {
 
         return profesor;
     }
-    
+
     public List<EDiaFeriado> listarDiasF(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaFeriado> lista = new ArrayList<>();
         String query = "SELECT idDiaFeriado, fecha, idMotivo FROM DiasFeriados";
         if (!condicion.equals("")) {
-            query += " WHERE "+condicion;
+            query += " WHERE " + condicion;
         }
         try {
-            Statement statement = _cnn.createStatement();            
+            Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
             while (rs != null && rs.next()) {
                 EDiaFeriado diaF = new EDiaFeriado();
@@ -1099,7 +1099,7 @@ public class CronogramasDAO {
 
         return lista;
     }
-    
+
     public EDiaFeriado obtenerFeriado(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EDiaFeriado feriado = new EDiaFeriado();
@@ -1128,7 +1128,7 @@ public class CronogramasDAO {
 
         return feriado;
     }
-     
+
     public int insertarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
         int result = -1;
 
@@ -1154,8 +1154,8 @@ public class CronogramasDAO {
         }
 
         return result;
-     }
-     
+    }
+
     public int actualizarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
         int result = -1;
 
@@ -1164,7 +1164,7 @@ public class CronogramasDAO {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setString(1, feriado.getFecha());
             ps.setInt(2, feriado.getMotivo().getIdMotivoAusencia());
-            ps.setLong(3,feriado.getIdDia());
+            ps.setLong(3, feriado.getIdDia());
             result = ps.executeUpdate();
             if (result > 0) {
                 msg = "Día feriado actualizado con exito";
@@ -1180,7 +1180,7 @@ public class CronogramasDAO {
 
         return result;
     }
-     
+
     public int eliminarDiaF(EDiaFeriado feriado) throws SQLException, Exception {
         int result = -1;
 
@@ -1203,7 +1203,7 @@ public class CronogramasDAO {
 
         return result;
     }
-    
+
     public EModuloCronograma obtenerCronograma(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EModuloCronograma cronograma = new EModuloCronograma();
@@ -1227,8 +1227,8 @@ public class CronogramasDAO {
                 cronograma.setFechaFin(rs.getString(5));
                 cronograma.setHorasDia(rs.getString(6));
                 cronograma.setEstado(rs.getString(7));
-                cronograma.setHoraInicio(rs.getString(8));
-                cronograma.setHoraFin(rs.getString(9));
+                cronograma.setHoraInicio(rs.getString(8).substring(0, 5));
+                cronograma.setHoraFin(rs.getString(9).substring(0, 5));
             }
         } catch (SQLException sqlE) {
             throw sqlE;
@@ -1240,7 +1240,7 @@ public class CronogramasDAO {
 
         return cronograma;
     }
-    
+
     public EPrograma obtenerPrograma(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EPrograma programa = new EPrograma();
@@ -1275,7 +1275,7 @@ public class CronogramasDAO {
 
         return programa;
     }
-    
+
     public EModulo obtenerModulo(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         EModulo modulo = new EModulo();
@@ -1295,8 +1295,7 @@ public class CronogramasDAO {
                 if (rs.getInt(4) != 0) {
                     moduloReq.setIdModulo(0);
                     modulo.setModuloRequerido(moduloReq);
-                }
-                else{
+                } else {
                     moduloReq.setIdModulo(rs.getInt(4));
                     modulo.setModuloRequerido(moduloReq);
                 }
@@ -1312,7 +1311,6 @@ public class CronogramasDAO {
 
         return modulo;
     }
-    
 
     public String getMessage() {
         return msg;
@@ -1350,7 +1348,7 @@ public class CronogramasDAO {
         ResultSet rs = null;
         boolean bandera = false;
         String query;
-        query = "SELECT * from DiasAusentes where fechaFin >= '"+ fecha + "' and fechaInicio <= '"+fecha+"'";
+        query = "SELECT * from DiasAusentes where fechaFin >= '" + fecha + "' and fechaInicio <= '" + fecha + "'";
         try {
             Statement statement = _cnn.createStatement();
             rs = statement.executeQuery(query);
@@ -1367,36 +1365,36 @@ public class CronogramasDAO {
         }
         return bandera;
     }
-    
-        public int insertarAsignacion(EModuloCronograma cronograma, EProfesor profe) throws SQLException, Exception {
-            int result = -1;
-            String query = "Insert into AsignacionProfesor (idPrograma, idModulo, idProfesor, fechaInicio, fechaFin) Values(?,?,?,?,?)";
-            ResultSet rs = null;
-            try {
 
-                PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, cronograma.getPrograma().getIdPrograma());
-                ps.setInt(2, cronograma.getModulo().getIdModulo());
-                ps.setLong(3, profe.getIdPersona());
-                ps.setString(4, profe.getFechaInicio());
-                ps.setString(5, profe.getFechaFin());
-                ps.execute();
-                rs = ps.getGeneratedKeys();
-                if (rs != null && rs.next()) {
-                    result = rs.getInt(1);
-                    msg = "Asignación almacenada con éxito";
-                }
-            } catch (SQLException sqlE) {
-                throw sqlE;
-            } catch (Exception e) {
-                throw e;
-            } finally {
-                _cnn = null;
+    public int insertarAsignacion(EModuloCronograma cronograma, EProfesor profe) throws SQLException, Exception {
+        int result = -1;
+        String query = "Insert into AsignacionProfesor (idPrograma, idModulo, idProfesor, fechaInicio, fechaFin) Values(?,?,?,?,?)";
+        ResultSet rs = null;
+        try {
+
+            PreparedStatement ps = _cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, cronograma.getPrograma().getIdPrograma());
+            ps.setInt(2, cronograma.getModulo().getIdModulo());
+            ps.setLong(3, profe.getIdPersona());
+            ps.setString(4, profe.getFechaInicio());
+            ps.setString(5, profe.getFechaFin());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                result = rs.getInt(1);
+                msg = "Asignación almacenada con éxito";
             }
+        } catch (SQLException sqlE) {
+            throw sqlE;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            _cnn = null;
+        }
 
-            return result;
+        return result;
     }
-        
+
     public int actualizarAsignacion(EModuloCronograma cronograma, EProfesor profe, int idAsi) throws SQLException, Exception {
         int result = -1;
 
@@ -1424,7 +1422,7 @@ public class CronogramasDAO {
 
         return result;
     }
-    
+
     public int elimnarAsignacion(int idAsi) throws SQLException, Exception {
         int result = -1;
 
@@ -1448,8 +1446,8 @@ public class CronogramasDAO {
 
         return result;
     }
-    
-        public int obtenerIdAsignacion(EModuloCronograma cronograma, EProfesor profesor) throws SQLException, Exception {
+
+    public int obtenerIdAsignacion(EModuloCronograma cronograma, EProfesor profesor) throws SQLException, Exception {
         int resultado = -1;
 
         ResultSet rs = null;

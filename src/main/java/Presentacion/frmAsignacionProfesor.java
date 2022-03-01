@@ -9,7 +9,6 @@ import Entidades.EProfesor;
 import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -250,7 +249,7 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
         limpiarTabla();
 
         try {
-            profesores = cronogramaBL.listar(cronograma);
+            profesores = cronogramaBL.listar(cronograma,"");
             for (EProfesor p : profesores) {
                 row[0] = p.getIdPersona();
                 row[1] = p.getNombre() + " " + p.getApellido1() + " " + p.getApellido2();
