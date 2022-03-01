@@ -57,7 +57,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnFiltar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         btnSel = new javax.swing.JButton();
 
@@ -128,13 +127,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        btnFiltar.setText("Filtrar");
-        btnFiltar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFiltarActionPerformed(evt);
-            }
-        });
-
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,9 +146,7 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(162, 162, 162)
-                .addComponent(btnFiltar, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(176, 176, 176)
+                .addGap(664, 664, 664)
                 .addComponent(btnSel, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(175, 175, 175)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,7 +170,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFiltar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(96, Short.MAX_VALUE))
@@ -201,6 +190,7 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
                     if (programa != null) {
                         txtNombre.setText(programa.getNombrePrograma());
                         txtCodigo.setText(programa.getCodigo());
+                        llenarTabla("p.codigo ='"+txtCodigo.getText()+"'");
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
@@ -210,17 +200,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
         });
         vistaBuscarProgramas.setVisible(true);
     }//GEN-LAST:event_btnBuscarProgramaActionPerformed
-
-    private void btnFiltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltarActionPerformed
-        CronogramaBLO crono = new CronogramaBLO();
-        if(!txtCodigo.getText().equals("")){
-            try{
-             llenarTabla("p.codigo ='"+txtCodigo.getText()+"'");   
-            }catch (Exception e){
-                
-            }
-        }
-    }//GEN-LAST:event_btnFiltarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
@@ -337,7 +316,6 @@ public class frmBuscarCronogramas extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarPrograma;
-    private javax.swing.JButton btnFiltar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnSel;
     private javax.swing.JLabel jLabel3;

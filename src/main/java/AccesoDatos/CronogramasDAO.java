@@ -523,7 +523,7 @@ public class CronogramasDAO {
     public int actualizar(EModuloCronograma cronograma, int idAsigPr) throws SQLException, Exception {
         int result = -1;
 
-        String query = "Update ModulosCronogramas idAsignacionProfe=?, fechaInicio=?, fechaFin=?, horaInicio=?, horaFin=?, horasDia=?, estado=? Where idModulo=? and idPrograma=?";
+        String query = "Update ModulosCronogramas SET idAsignacionProfe=?, fechaInicio=?, fechaFin=?, horaInicio=?, horaFin=?, horasDia=?, estado=? Where idModulo=? and idPrograma=?";
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setInt(1, idAsigPr);
@@ -565,7 +565,7 @@ public class CronogramasDAO {
     public int actualizar(EModuloCronograma cronograma) throws SQLException, Exception {
         int result = -1;
 
-        String query = "Update AsignacionProfesor fechaInicio=?, fechaFin=? Where idModulo=? and idPrograma=? and idProfesor=?";
+        String query = "Update AsignacionProfesor SET fechaInicio=?, fechaFin=? Where idModulo=? and idPrograma=? and idProfesor=?";
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.setInt(3, cronograma.getModulo().getIdModulo());
@@ -602,7 +602,7 @@ public class CronogramasDAO {
     public int eliminar(EModuloCronograma cronograma) throws SQLException, Exception {
         int result = -1;
 
-        String query = String.format("Delete ModulosCronogramas Where idModulo=%d and idPrograma=%d", cronograma.getModulo().getIdModulo(), cronograma.getPrograma().getIdPrograma());
+        String query = String.format("Delete FROM ModulosCronogramas Where idModulo=%d and idPrograma=%d", cronograma.getModulo().getIdModulo(), cronograma.getPrograma().getIdPrograma());
         try {
             PreparedStatement ps = _cnn.prepareStatement(query);
             ps.execute(query);
@@ -1072,7 +1072,7 @@ public class CronogramasDAO {
     public List<EDiaFeriado> listarDiasF(String condicion) throws SQLException, Exception {
         ResultSet rs = null;
         List<EDiaFeriado> lista = new ArrayList<>();
-        String query = "SELECT idDiaFeriado, fecha, idMotivo FROM DiasFeriados";
+        String query = "SELECT idDiaFeriado, fecha, DiasFeriados.idMotivo FROM DiasFeriados inner join MotivosDeAusencias on DiasFeriados.idMotivo = MotivosDeAusencias.idMotivo";
         if (!condicion.equals("")) {
             query += " WHERE " + condicion;
         }

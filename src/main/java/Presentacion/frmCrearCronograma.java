@@ -43,7 +43,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         try {
             if (listaMC != null && actualizar == true) {
                 listaModulosProgramas = (ArrayList<EModuloCronograma>) listaMC;
-                
+
             }
             if (actualizar) {
                 btnRecalcalcular.setEnabled(true);
@@ -99,7 +99,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnRecalcalcular = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -323,9 +323,14 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 204));
-        jButton3.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        jButton3.setText("Regresar");
+        btnRegresar.setBackground(new java.awt.Color(255, 255, 204));
+        btnRegresar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -340,7 +345,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(53, 53, 53)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(1069, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -354,7 +359,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -393,10 +398,16 @@ public class frmCrearCronograma extends javax.swing.JDialog {
             @Override
             public void windowClosed(WindowEvent wE) {
                 try {
+                    CronogramaBLO cronogramaBLO = new CronogramaBLO();
                     programa = vistaBuscarProgramas.getPrograma();
                     if (programa != null) {
-                        txtNombre.setText(programa.getNombrePrograma());
-                        txtCodigo.setText(programa.getCodigo());
+                        if (cronogramaBLO.listar("p.idPrograma = " + programa.getIdPrograma()).isEmpty()) {
+                            txtNombre.setText(programa.getNombrePrograma());
+                            txtCodigo.setText(programa.getCodigo());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Este programa no se puede escoger porque ya tiene módulos");
+                        }
+
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
@@ -482,6 +493,8 @@ public class frmCrearCronograma extends javax.swing.JDialog {
                         listaModulosPrograma.setPrograma(programa);
                     }
                     String msj = cronogramaBLO.recibirModulos(listaModulosProgramas, listaModulosParalela, formatter.format(txtfecha.getValue()));
+                    JOptionPane.showMessageDialog(null, msj);
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Debe de seleccionar un programa");
                 }
@@ -524,6 +537,13 @@ public class frmCrearCronograma extends javax.swing.JDialog {
 
 
     }//GEN-LAST:event_tablaModulosProgramasPMouseClicked
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        listaModulosParalela.clear();
+        listaModulosProgramas.clear();
+        this.dispose();
+
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void llenarTabla(String condition) throws Exception {
         CronogramaBLO cronogramaBLO = new CronogramaBLO();
@@ -686,7 +706,7 @@ public class frmCrearCronograma extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscarPrograma;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnRecalcalcular;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -620,6 +620,31 @@ public class frmCrearModuloPrograma extends javax.swing.JDialog {
         });
     }
 
+    private boolean compararHoras(String inicio, String fin) {
+        boolean banderaHoras = false;
+        String[] hora = inicio.split(":");
+        int horaInicio = Integer.parseInt(hora[0]);
+        int minutoInicio = Integer.parseInt(hora[1]);
+        hora = fin.split(":");
+        int horaFin = Integer.parseInt(hora[0]);
+        int minutoFin = Integer.parseInt(hora[1]);
+        double resultado = 0;
+
+        if (horaInicio < horaFin) {
+            banderaHoras = true;
+        } else if (horaInicio == horaFin && minutoInicio < minutoFin) {
+            banderaHoras = true;
+        }
+
+        if (banderaHoras == true) {
+            if (horaFin - horaInicio < 6) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddMod;
     private javax.swing.JButton btnEliminar;

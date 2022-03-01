@@ -253,7 +253,6 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
             for (EProfesor p : profesores) {
                 row[0] = p.getIdPersona();
                 row[1] = p.getNombre() + " " + p.getApellido1() + " " + p.getApellido2();
-                row[3] = p.getCentro().getNombre();
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -270,7 +269,6 @@ public class frmAsignacionProfesor extends javax.swing.JDialog {
         };
         model.addColumn("ID");
         model.addColumn("Nombre");
-        model.addColumn("Centro");
         jTable1.setModel(model);
     }
 

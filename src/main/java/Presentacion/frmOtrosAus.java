@@ -26,7 +26,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
         initComponents();
         llenarComboMotivos();
         try {
-            llenarTabla("");
+            llenarTabla("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Abolicion del ejercito' AND justificacion NOT LIKE 'Año nuevo' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Dia de Juan Santa Maria' AND justificacion NOT LIKE 'Dia de la independencia' AND justificacion NOT LIKE 'Dia de la madre' AND justificacion NOT LIKE 'Dia del trabajador' AND justificacion NOT LIKE 'Jueves Santo' AND justificacion NOT LIKE 'Viernes Santo' AND justificacion NOT LIKE 'Navidad' AND justificacion NOT LIKE 'Virgen de los santos'");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -236,7 +236,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
             if (!dia.getFecha().equals("")) {
                 if (cronogramaBL.eliminarDiaF(dia) > -1) {
                     JOptionPane.showMessageDialog(this, "Ausencia eliminada");
-                    llenarTabla("");
+                    llenarTabla("MotivosDeAusencias.justificacion NOT LIKE 'Vacaciones' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Abolicion del ejercito' AND MotivosDeAusencias.justificacion NOT LIKE 'Año nuevo' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de Juan Santa Maria' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la independencia' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la madre' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia del trabajador' AND MotivosDeAusencias.justificacion NOT LIKE 'Jueves Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Viernes Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Navidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Virgen de los santos'");
                     dia = null;
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al eliminar");
@@ -263,7 +263,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
                 fecha.setMotivo(motivo);
                 if (cronogramaBL.insertarDiaF(fecha) > -1) {
                     JOptionPane.showMessageDialog(this, "Ausencia insertada");
-                    llenarTabla("");
+                    llenarTabla("MotivosDeAusencias.justificacion NOT LIKE 'Vacaciones' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Abolicion del ejercito' AND MotivosDeAusencias.justificacion NOT LIKE 'Año nuevo' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de Juan Santa Maria' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la independencia' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la madre' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia del trabajador' AND MotivosDeAusencias.justificacion NOT LIKE 'Jueves Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Viernes Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Navidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Virgen de los santos'");
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
                 }
@@ -285,7 +285,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
                 if (!motivo.getMotivo().equals("")) {
                     if (cronogramaBL.actualizarDiaF(dia) > -1) {
                         JOptionPane.showMessageDialog(this, "Ausencia modificada");
-                        llenarTabla("");
+                        llenarTabla("MotivosDeAusencias.justificacion NOT LIKE 'Vacaciones' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Abolicion del ejercito' AND MotivosDeAusencias.justificacion NOT LIKE 'Año nuevo' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de Juan Santa Maria' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la independencia' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la madre' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia del trabajador' AND MotivosDeAusencias.justificacion NOT LIKE 'Jueves Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Viernes Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Navidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Virgen de los santos'");
                         dia = null;
                     } else {
                         JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
@@ -311,7 +311,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
         List<EMotivoAusencia> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
         try {
-            list = cronogramaBL.listarMotivos("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Abolicion del ejercito' AND justificacion NOT LIKE 'Año nuevo' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Dia de Juan Santa Maria' AND justificacion NOT LIKE 'Dia de la independencia' AND justificacion NOT LIKE 'Dia de la madre' AND justificacion NOT LIKE 'Dia del trabajador' AND justificacion NOT LIKE 'Jueves Santo' AND justificacion NOT LIKE 'Viernes Santo' AND justificacion NOT LIKE 'Navidad' AND justificacion NOT LIKE 'Virgen de los santos'");
+            list = cronogramaBL.listarMotivos("MotivosDeAusencias.justificacion NOT LIKE 'Vacaciones' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Abolicion del ejercito' AND MotivosDeAusencias.justificacion NOT LIKE 'Año nuevo' AND MotivosDeAusencias.justificacion NOT LIKE 'Incapacidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de Juan Santa Maria' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la independencia' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia de la madre' AND MotivosDeAusencias.justificacion NOT LIKE 'Dia del trabajador' AND MotivosDeAusencias.justificacion NOT LIKE 'Jueves Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Viernes Santo' AND MotivosDeAusencias.justificacion NOT LIKE 'Navidad' AND MotivosDeAusencias.justificacion NOT LIKE 'Virgen de los santos'");
             for (EMotivoAusencia motivo : list) {
                 jCBMotivos.addItem(motivo.toString());
             }
@@ -323,7 +323,7 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
     private void llenarTabla(String condition) throws Exception {
         List<EDiaFeriado> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
-        Object[] row = new Object[4];
+        Object[] row = new Object[5];
 
         limpiarTabla();
 
@@ -331,9 +331,11 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
             list = cronogramaBL.listarDiasF(condition);
 
             for (EDiaFeriado d : list) {
+                EMotivoAusencia motivoAux = cronogramaBL.obtenerMotivo("idMotivo ="+d.getMotivo().getIdMotivoAusencia());
                 row[0] = d.getIdDia();
                 row[1] = d.getFecha();
                 row[2] = d.getMotivo().getIdMotivoAusencia();
+                row[3] = motivoAux.getMotivo();
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -351,7 +353,9 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
         model.addColumn("ID");
         model.addColumn("Fecha");
         model.addColumn("idMotivo");
+        model.addColumn("Motivo");
         jtableAusencias.setModel(model);
+        ocultarColumnas();
     }
     
     private String formatearFecha(Object value, boolean inv) {
@@ -365,6 +369,18 @@ public class frmOtrosAus extends javax.swing.JInternalFrame {
         return fecha;
     }
 
+    public void ocultarColumnas(){
+        jtableAusencias.getColumnModel().getColumn(0).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(0).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(0).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMinWidth(0);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnCrear;

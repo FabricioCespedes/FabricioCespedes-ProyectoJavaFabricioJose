@@ -29,7 +29,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         initComponents();
         llenarComboMotivos();
         try {
-            llenarTabla("");
+            llenarTabla("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Suspencion' AND justificacion NOT LIKE 'Permiso Administrativo'");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -232,7 +232,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
                 fecha.setMotivo(motivo);
                 if (cronogramaBL.insertarDiaF(fecha) > -1) {
                     JOptionPane.showMessageDialog(this, "Día feriado insertada");
-                    llenarTabla("");
+                    llenarTabla("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Suspencion' AND justificacion NOT LIKE 'Permiso Administrativo'");
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
                 }
@@ -252,7 +252,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
                 if (!motivo.getMotivo().equals("")) {
                     if (cronogramaBL.actualizarDiaF(dia) > -1) {
                         JOptionPane.showMessageDialog(this, "Día feriado modificado");
-                        llenarTabla("");
+                        llenarTabla("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Suspencion' AND justificacion NOT LIKE 'Permiso Administrativo'");
                         dia = null;
                     } else {
                         JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
@@ -290,7 +290,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
             if (!dia.getFecha().equals("")) {
                 if (cronogramaBL.eliminarDiaF(dia) > -1) {
                     JOptionPane.showMessageDialog(this, "Día feriado eliminado");
-                    llenarTabla("");
+                    llenarTabla("justificacion NOT LIKE 'Vacaciones' AND justificacion NOT LIKE 'Incapacidad' AND justificacion NOT LIKE 'Suspencion' AND justificacion NOT LIKE 'Permiso Administrativo'");
                     dia = null;
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un error al eliminar");
@@ -325,7 +325,7 @@ public class frmFeriados extends javax.swing.JInternalFrame {
     private void llenarTabla(String condition) throws Exception {
         List<EDiaFeriado> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
-        Object[] row = new Object[4];
+        Object[] row = new Object[5];
 
         limpiarTabla();
 
@@ -333,9 +333,11 @@ public class frmFeriados extends javax.swing.JInternalFrame {
             list = cronogramaBL.listarDiasF(condition);
 
             for (EDiaFeriado d : list) {
+                EMotivoAusencia motivoAux = cronogramaBL.obtenerMotivo("idMotivo ="+d.getMotivo().getIdMotivoAusencia());
                 row[0] = d.getIdDia();
                 row[1] = d.getFecha();
                 row[2] = d.getMotivo().getIdMotivoAusencia();
+                row[3] = motivoAux.getMotivo();
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -353,7 +355,9 @@ public class frmFeriados extends javax.swing.JInternalFrame {
         model.addColumn("ID");
         model.addColumn("Fecha");
         model.addColumn("idMotivo");
+        model.addColumn("Motivo");
         jtableAusencias.setModel(model);
+        ocultarColumnas();
     }
 
     private String formatearFecha(Object value, boolean inv) {
@@ -366,6 +370,20 @@ public class frmFeriados extends javax.swing.JInternalFrame {
 
         String fecha = formatter.format(value);
         return fecha;
+    }
+    
+    
+    public void ocultarColumnas(){
+        jtableAusencias.getColumnModel().getColumn(0).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(0).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(0).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMinWidth(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
