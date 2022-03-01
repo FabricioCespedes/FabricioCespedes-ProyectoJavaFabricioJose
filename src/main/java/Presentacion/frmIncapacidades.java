@@ -5,6 +5,7 @@
 package Presentacion;
 
 import Entidades.EDiaAusente;
+import Entidades.EMotivoAusencia;
 import Entidades.EProfesor;
 import LogicaNegocios.CronogramaBLO;
 import java.awt.event.WindowAdapter;
@@ -27,6 +28,12 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
      */
     public frmIncapacidades() {
         initComponents();
+        try{
+            llenarTabla("MotivosDeAusencias.justificacion = 'Incapacidad'");
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "ERROR: "+e.getMessage());
+        }
+        
     }
 
     /**
@@ -57,6 +64,8 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
         txtIdProfesorV = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+
+        setTitle("Administrar Incapacidades");
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -318,7 +327,7 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
             if (cronogramaBL.insertarDiaA(fecha) > -1) {
                 JOptionPane.showMessageDialog(this, "Ausencia insertada");
                 limpiarTextos();
-                llenarTabla("");
+                llenarTabla("MotivosDeAusencias.justificacion = 'Incapacidad'");
             } else {
                 JOptionPane.showMessageDialog(this, "Hubo un error al insertar");
             }
@@ -342,7 +351,7 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
                     if (cronogramaBL.actualizarDiaA(fecha, dia) > 0) {
                         JOptionPane.showMessageDialog(this, "Ausencia modificada");
                         limpiarTextos();
-                        llenarTabla("");
+                        llenarTabla("MotivosDeAusencias.justificacion = 'Incapacidad'");
                     } else {
                         JOptionPane.showMessageDialog(this, "Hubo un error al modificar");
                     }   
@@ -362,7 +371,7 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
                 if (cronogramaBLO.eliminarDiaA(dia) > 0) {
                     JOptionPane.showMessageDialog(this, "Incapacidad eliminada");
                     limpiarTabla();
-                    llenarTabla("");
+                    llenarTabla("MotivosDeAusencias.justificacion = 'Incapacidad'");
                 } else {
                     JOptionPane.showMessageDialog(this, "Hubo un problema al elimninar");
                 }
@@ -396,7 +405,7 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
     private void llenarTabla(String condition) throws Exception {
         List<EDiaAusente> list;
         CronogramaBLO cronogramaBL = new CronogramaBLO();
-        Object[] row = new Object[4];
+        Object[] row = new Object[6];
 
         limpiarTabla();
 
@@ -404,10 +413,22 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
             list = cronogramaBL.listarDiasA(condition);
 
             for (EDiaAusente d : list) {
+                EMotivoAusencia motivoAux = cronogramaBL.obtenerMotivo("idMotivo ="+d.getMotivo().getIdMotivoAusencia());
+                EProfesor profesorAux = cronogramaBL.obtenerProfesor("idProfesor ="+d.getProfesor().getIdPersona());
                 row[0] = d.getFecha();
                 row[1] = d.getFechaFin();
                 row[2] = d.getProfesor().getIdPersona();
-                row[3] = d.getMotivo().getIdMotivoAusencia();
+                if (!profesorAux.getNombre().equals("")) {
+                    row[3] = profesorAux.getNombre()+" "+profesorAux.getApellido1()+" "+profesorAux.getApellido2();                   
+                }else{
+                    row[3] ="";
+                }
+                row[4] = d.getMotivo().getIdMotivoAusencia();
+                if (!motivoAux.getMotivo().equals("")) {
+                    row[5] = motivoAux.getMotivo();                    
+                }else{
+                   row[5] =""; 
+                }
                 model.addRow(row);
             }
         } catch (Exception e) {
@@ -426,8 +447,11 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
         model.addColumn("Fecha Inicial");
         model.addColumn("Fecha Final");
         model.addColumn("idProfesor");
+        model.addColumn("Profesor");
         model.addColumn("idMotivo");
+        model.addColumn("Motivo");
         jtableAusencias.setModel(model);
+        ocultarColumnas();
     }
 
     private void limpiarTextos() {
@@ -445,6 +469,19 @@ public class frmIncapacidades extends javax.swing.JInternalFrame {
 
         String fecha = formatter.format(value);
         return fecha;
+    }
+    
+    public void ocultarColumnas(){
+        jtableAusencias.getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(2).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(2).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setMaxWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setMinWidth(0);
+        jtableAusencias.getColumnModel().getColumn(4).setPreferredWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(4).setMaxWidth(0);
+        jtableAusencias.getTableHeader().getColumnModel().getColumn(4).setMinWidth(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

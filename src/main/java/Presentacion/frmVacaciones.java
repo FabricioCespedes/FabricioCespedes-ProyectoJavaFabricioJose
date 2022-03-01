@@ -37,7 +37,7 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
     public frmVacaciones() {
         initComponents();
         try {
-            llenarTabla("");
+            llenarTabla("MotivosDeAusencias.justificacion = 'Vacaciones'");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
@@ -71,6 +71,8 @@ public class frmVacaciones extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         spinnerFechaI = new javax.swing.JSpinner();
         spinnerFechaF = new javax.swing.JSpinner();
+
+        setTitle("Administrar Vacaciones");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
